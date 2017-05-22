@@ -68,32 +68,32 @@ var startupDone = false;
 var localURL, dio_port;
 
 fs.watch(settingsPath, function (event, filename) {
-    // Only run this once
+    // NB. filename is not passed reliably
     if (!startupDone) {
-        startupDone = true;
-//        console.log("fs.watch: " + filename + ": " + event);
-        if (filename && filename == '.diogenes.run' && (event == 'change' || event == 'rename')) {
-            if (fs.existsSync(lockFile)) {
-                var ar = readLockFile();
-                dio_port = ar[0];
-                if (!dio_port) {
-                    window.alert("ERROR: port unknown!");
-                    gui.App.quit();
+        console.log("fs.watch: " + filename + ": " + event);
+        if (fs.existsSync(lockFile) &&
+            (event == 'change' || event == 'rename')) {
+            var ar = readLockFile();
+            dio_port = ar[0];
+            if (!dio_port) {
+                window.alert("ERROR: port unknown!");
+                gui.App.quit();
+            }
+            localURL = 'http://127.0.0.1:' + dio_port;
+            // Ignore further changes to the settings dir.
+            startupDone = true;
+            // Hide the mainWin, then open our real browser window.
+            initMenu(mainWin);
+            mainWin.hide();
+            gui.Window.open(localURL, winConfig, function(newWin) {
+                if (osName != "darwin") {
+                    initMenu(newWin);
                 }
-                localURL = 'http://127.0.0.1:' + dio_port;
-                // Hide the mainWin, then open our real browser window.
-                initMenu(mainWin);
-                mainWin.hide();
-                gui.Window.open(localURL, winConfig, function(newWin) {
-                    if (osName != "darwin") {
-                        initMenu(newWin);
-                    }
-                });
-            }
-            else {
-                // Probably we caught our own act of unlinking
-                console.log ("Lockfile has been deleted.");
-            }
+            });
+        }
+        else {
+            // Probably we caught our own act of unlinking
+            console.log ("Lockfile not present.");
         }
     }
 });
