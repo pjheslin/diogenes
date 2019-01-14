@@ -42,13 +42,13 @@ use Diogenes::UnicodeInput;
 our(%encoding, %context, @contexts, %choices, %list_labels, %auths,
     %lists, %work, %lang, %author, %last_work, %work_start_block,
     %level_label, %sub_works, %top_levels, %last_citation, $bibliography,
-    %coptic_encoding, %database, @databases, @filters);
+    %coptic_encoding, %database, @databases, @filters, $logeion);
 
 use Exporter;
 @Diogenes::Base::ISA = qw(Exporter Diogenes::UnicodeInput);
 @Diogenes::Base::EXPORT_OK = qw(%encoding %context @contexts
     %choices %work %author %last_work %work_start_block %level_label
-    %top_levels %last_citation %database @databases @filters);
+    %top_levels %last_citation %database @databases @filters $logeion);
 our($RC_DEBUG, $OS, $config_dir);
 $RC_DEBUG = 0;
 
@@ -205,6 +205,7 @@ my %defaults = (
 
     perseus_links => 1, # links to Perseus morphological parser 
     perseus_show => "split",
+    prefer_logeion => 1,
 
     hit_html_start => '<font color="red"><b><u>',
     hit_html_end => '</u></b></font>',
@@ -682,6 +683,7 @@ sub set_handlers
         $self->{perseus_links} and $self->{output_format} =~ m/html/; 
     $self->{perseus_morph} = 0 if $self->{type} eq 'cop';
     $self->{perseus_morph} = 0 if $self->{encoding} =~ m/babel/i;
+    $logeion = 1 if $self->{prefer_logeion};
     
 #       if ($self->{output_format} =~ m/html/i)
 #       {

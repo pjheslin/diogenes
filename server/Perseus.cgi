@@ -3,7 +3,7 @@
 # Interface to Perseus morphological data and dictionaries.
 package Diogenes::Perseus;
 use strict;
-use Diogenes::Base qw(%encoding %context @contexts %choices %work %author %database @databases @filters);
+use Diogenes::Base qw(%encoding %context @contexts %choices %work %author %database @databases @filters $logeion);
 use Diogenes::EntityTable;
 use FileHandle;
 use Encode;
@@ -100,6 +100,9 @@ my %dicts = (
     lat => ['lat.ls.perseus-eng1.xml', 'Lewis-Short', 'xml'],
     eng => ['gcide.txt', 'Gcide (based on 1913 Webster)', 'dict']
     );
+if ($logeion) {
+    $dicts{grk} = ['grc.lsj.logeion.xml', 'LSJ', 'xml']
+}
 my %format_fn;
 
 warn "I don't know about language $lang!\n" unless exists $dicts{$lang};
@@ -193,8 +196,13 @@ my $xml_key_fn = sub {
 my $lsj_search_setup = sub {
     open $search_fh, "<$dict_file" or die $!;
     $size = -s $dict_file;
-    $comp_fn = $beta_comp_fn;
     $key_fn = $xml_key_fn;
+    if ($logeion) {
+        $comp_fn = $ascii_comp_fn;
+    }
+    else {
+        $comp_fn = $beta_comp_fn;
+    }
 };
 
 my $lewis_search_setup = sub {
@@ -307,7 +315,7 @@ my $text_with_links = sub {
         my $form = $word;
         $form =~ s/\-//g;
         $form =~ s/[^A-Za-z]//g if $text_lang eq 'eng';
-        $word = $beta_to_utf8->($word) if $text_lang eq "grk";
+        $word = $beta_to_utf8->($word) if $text_lang eq "grk" and not $logeion;
         # We use a new page, since otherwise the back button won't get
         # us back where we came from. -- Changed to workaround FF bug.
         if ($form) {
@@ -324,7 +332,7 @@ my $text_with_links = sub {
     return $out;
 };
 
-my $qquery = ($lang eq "grk") ? $beta_to_utf8->($query) : $query;
+my $qquery = ($lang eq "grk" and not $logeion) ? $beta_to_utf8->($query) : $query;
 
 my $munge_ls_lemma = sub {
     my $text =shift;
@@ -511,7 +519,8 @@ my $do_lookup = sub {
     else {
         warn "Bad Perseus request (e)";
     }
-    my $pretty_word = ($lang eq "grk") ? $beta_to_utf8->($word) : $word;
+    my $pretty_word = ($lang eq "grk") ?
+        $beta_to_utf8->($word) : $word;
 
     $word =~ tr/A-Z/a-z/;
     $word =~ s/[^a-z]//g;
@@ -533,7 +542,7 @@ my $do_lookup = sub {
 
 my $format_analysis = sub {
     my $anl = shift;
-    $query = $beta_to_utf8->($query) if $lang eq 'grk';
+    $query = $beta_to_utf8->($query) if $lang eq 'grk' and not $logeion;
     my (@out, @suppl);
 #     print "\n\n$anl\n\n";
     while ($anl =~ m/{([^\}]+)}((?:\[\d+\])*)/g) {
@@ -542,7 +551,8 @@ my $format_analysis = sub {
         my $suppl = $2;
         if ($entry =~ m/^(\d+) (\d) (.*?)\t(.*?)\t(.*?)$/) {
             my ($dict, $conf, $lemma, $trans, $info) = ($1, $2, $3, $4, $5);
-            $lemma = $beta_to_utf8->($lemma) if $lang eq 'grk';
+            $lemma = $beta_to_utf8->($lemma)
+                if $lang eq 'grk' and not $logeion;
             $lemma = $munge_ls_lemma->($lemma) if $lang eq 'lat';
             $lemma .= " ($trans)" if $trans =~ m/\S/;
             $lemma .= ": $info";
@@ -616,7 +626,7 @@ my $format_inflect = sub {
     my @out = split /\t/, $out;
     my $dict = shift @out;
     my $link = qq{<a onClick="getEntry$lang('$dict');">}.
-        ($lang eq "grk" ? $beta_to_utf8->($lem) : $lem).
+        (($lang eq "grk" and not $logeion) ? $beta_to_utf8->($lem) : $lem).
         qq{</a>};
     print qq{<h2><a onClick="toggleLemma('$lem_num');"><img src="${picture_dir}opened.png" srcset="${picture_dir}opened.hidpi.png 2x"
 align="bottom" id="lemma_$lem_num" /></a>&nbsp;$link</h2>};
@@ -625,7 +635,8 @@ align="bottom" id="lemma_$lem_num" /></a>&nbsp;$link</h2>};
     for (@out) {
         m/^(\S+)(.*)$/;
         my ($form, $infl) = ($1, $2);
-        my $label = ($lang eq "grk" ? $beta_to_utf8->($form) : $form) . ": $infl";
+        my $label = (($lang eq "grk" and not $logeion) ?
+                     $beta_to_utf8->($form) : $form) . ": $infl";
         print qq{<span class="form_span_visible" infl="$infl"><input type="checkbox" name="lemma_list" value="$form">$label</input><br/></span>};
     }
     print '</span>';
@@ -682,7 +693,8 @@ my $normalize_greek_lemma = sub {
 
 my $find_lemma = sub {
     my $filename = ($lang eq 'grk' ? 'greek' : 'latin') . '-lemmata.txt';
-    my $norm_func = ($lang eq 'grk') ? $normalize_greek_lemma : $normalize_latin_lemma;
+    my $norm_func = ($lang eq 'grk' and not $logeion) ?
+        $normalize_greek_lemma : $normalize_latin_lemma;
     $txt_file = File::Spec->catfile($perseus_dir, $filename);
     my $target = $norm_func->($query);
     $target =~ s/[,\s]+/ /g;
@@ -706,7 +718,7 @@ my $find_lemma = sub {
     if (@results) {
         my %labels;
         $labels{$_} = qq{<a onClick="getEntry$lang('$dicts{$_}');">}.
-            ($lang eq "grk" ? $beta_to_utf8->($_) : $_).
+            (($lang eq "grk" and not $logeion) ? $beta_to_utf8->($_) : $_).
             qq{</a>} for @results;
         print $f->h2("Lemma matches for $qq:");
         $f->autoEscape(0);
@@ -773,11 +785,11 @@ my $do_parse = sub {
     my $analysis = $try_parse->($word);
     if (not defined $analysis) {
         # Try lower-case if upper
-        if ($lang eq 'lat' and $word =~ m/^[A-Z]/) {
+        if (($lang eq 'lat' or $logeion) and $word =~ m/^[A-Z]/) {
             $word =~ tr/A-Z/a-z/;
             $analysis = $try_parse->($word);
         }
-        elsif ($lang eq 'grk' and $word =~ m/^\*/) {
+        elsif ($lang eq 'grk' and not $logeion and $word =~ m/^\*/) {
             $word =~ s/\*//g;
             $word =~ s/^([\\\/=|)(]+)([aeiouhw])/$2$1/;
             $analysis = $try_parse->($word);
