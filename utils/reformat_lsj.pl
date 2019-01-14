@@ -30,27 +30,31 @@ sub print_contents {
             next;
         }
         if($item->{'type'} eq 't') {
-            my $content = $item->{'content'};
-            # Consolidate whitespace.  A single excess space remains at the end of every line/entry, but we can live with that.
-            $content =~ s/\s+/ /gs;
-            printf("%s", $content);
+            if ($inentry) {
+                my $content = $item->{'content'};
+                # Consolidate whitespace.
+                $content =~ s/\s+/ /gs;
+                printf("%s", $content);
+            }
         } else {
             if($item->{'name'} eq 'entryFree') {
                 $inentry = 1;
             }
-            if(! $inentry or $item->{'name'} eq 'entryFree') {
-                printf("\n");
-            }
-            if (scalar keys %{$item->{'attrib'}}) {
-                printf("<%s%s>", $item->{'name'},
-                       attribs_str($item->{'attrib'}));
-            } else {
-                printf("<%s>", $item->{'name'});
+            if($inentry) {
+                if (scalar keys %{$item->{'attrib'}}) {
+                    printf("<%s%s>", $item->{'name'},
+                           attribs_str($item->{'attrib'}));
+                } else {
+                    printf("<%s>", $item->{'name'});
+                }
             }
             print_contents($item->{'content'});
-            printf("</%s>", $item->{'name'});
+            if($inentry) {
+                printf("</%s>", $item->{'name'});
+            }
             if($item->{'name'} eq 'entryFree') {
                 $inentry = 0;
+                printf("\n");
             }
         }
     }
@@ -61,5 +65,3 @@ my @x = $parser->parse(\*STDIN);
 for my $i (@x) {
 	print_contents($i);
 }
-
-printf("\n");
