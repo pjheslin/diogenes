@@ -10,6 +10,7 @@ BUILD = $(DEPDIR)/build
 GCIDE = $(DEPDIR)/gcide/gcide.dict.dz
 LEXICA = $(DEPDIR)/lexica
 MORPHEUS = $(DEPDIR)/morpheus
+LOGEIONDIR = $(DEPDIR)/helma/LSJ
 
 GCIDEVERSION = 0.48.1
 GCIDESUM = e227f8f9e720eb0b1b805ecec4eb4e5c1045784ab3871cdebd19c237d1242311
@@ -25,7 +26,8 @@ DATAFILES = \
 	$(DATA)/greek-analyses.idt \
 	$(DATA)/latin-lemmata.txt \
 	$(DATA)/greek-lemmata.txt \
-	$(DATA)/gcide.txt
+	$(DATA)/gcide.txt \
+        $(DATA)/grc.lsj.logeion.xml
 
 .SUFFIXES: .txt .idt
 
@@ -78,6 +80,11 @@ $(DATA)/grc.lsj.perseus-eng0.xml: utils/reformat_lsj.pl $(LEXICA)/.git/HEAD
 	mkdir -p $(DATA)
 	echo '<!-- Reformatted for Diogenes from the XML files in https://github.com/PerseusDL/lexica -->' > $@
 	for LSJ in $(LSJS); do cat $$LSJ | perl ./utils/reformat_lsj.pl >> $@; done
+
+$(DATA)/grc.lsj.logeion.xml: utils/reformat_helma_lsj.pl 
+	mkdir -p $(DATA)
+	echo '<!-- Reformatted for Diogenes from the Logeion version of the original Perseus XML -->' > $@
+	for LSJ in $(LOGEIONDIR)/greatscott*.xml; do cat $$LSJ | perl ./utils/reformat_lsj.pl -l >> $@; done
 
 $(BUILD)/lsj-index.txt: utils/index_lsj.pl $(DATA)/grc.lsj.perseus-eng0.xml
 	mkdir -p $(BUILD)
