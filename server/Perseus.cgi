@@ -265,8 +265,11 @@ local $binary_search = sub {
     my $stop = shift;
     my $mid = int(($start + $stop) / 2);
     return undef if $start == $mid or $stop == $mid;
+    # The bytewise seek may land in the middle of a char
+    no warnings 'utf8';
     seek $search_fh, $mid, 0;
     <$search_fh> unless $mid == 0;
+    use warnings 'utf8';
     $dict_offset = tell $search_fh;
     my $line = <$search_fh>;
     chomp $line;
