@@ -7,6 +7,7 @@ use Diogenes::Base qw(%encoding %context @contexts %choices %work %author %datab
 use Diogenes::EntityTable;
 use FileHandle;
 use Encode;
+use open qw(:utf8);
 
 use FindBin qw($Bin);
 use File::Spec::Functions qw(:ALL);
