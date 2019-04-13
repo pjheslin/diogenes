@@ -8,7 +8,7 @@ all:
 	unxz prebuilt-data.tar.xz
 	tar -xvf prebuilt-data.tar
 	rm prebuilt-data.tar
-	rm prebuilt-data.tar.xz
+#	rm prebuilt-data.tar.xz
 
 clean:
 	rm -f $(DATA)/gcide.txt
