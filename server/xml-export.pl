@@ -1112,8 +1112,9 @@ sub convert_chunk {
 
     # Some further punctuation
     $chunk =~ s/_/&#x2014;/g;
-    $chunk =~ s/!/./g;
-
+    if ($lang eq 'g') {
+        $chunk =~ s/!/./g;
+    }
     # Whitespace, etc.
 
     # Line/page breaks
