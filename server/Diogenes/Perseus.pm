@@ -662,7 +662,7 @@ my $silverdict_link = sub {
     my $word = shift;
     my $href = "http://localhost:2628/api/query/Diogenes/$word";
     # We'll use a popup window to view the definition
-    return qq{<a onClick="window.open('$href', 'SilverDict', 'width=800,height=600,scrollbars=yes,resizable=yes,toolbar=no,menubar=no,location=no,status=no'); return false;" href="#"><i>SilverDict</i></a>};
+    return qq{ <a onClick="window.open('$href', 'SilverDict', 'width=800,height=600,scrollbars=yes,resizable=yes,toolbar=no,menubar=no,location=no,status=no'); return false;" href="#"><i>SilverDict</i></a>};
 };
 
 our $munge_element = sub {
