@@ -660,9 +660,9 @@ my $old_pdf_link = sub {
 
 my $silverdict_link = sub {
     my $word = shift;
-    my $href = "http://localhost:2628/api/query/Diogenes/$word";
+    my $href = "http://localhost:2628/?group=Diogenes&key=$word";
     # We'll use a popup window to view the definition
-    return qq{ <a onClick="window.open('$href', 'SilverDict', 'width=800,height=600,scrollbars=yes,resizable=yes,toolbar=no,menubar=no,location=no,status=no'); return false;" href="#"><i>SilverDict</i></a>};
+    return qq{ <a onClick="window.open('$href', 'SilverDict', 'width=500,height=600,left='+ (window.screen.width - 500) +',top='+ (window.screen.height - 600)); return false;" href="#"><i>SilverDict</i></a>};
 };
 
 our $munge_element = sub {
