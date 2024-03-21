@@ -2154,7 +2154,8 @@ sub print_output
         my $success;
         my $first_cit = shift @{ $self->{interleave_printing} };
         $success = print $first_cit if $first_cit;
-        print STDERR "Print failed (first_cit)! $!\n" unless $success;
+	# nithardus: If not altered, this clutters the output of the CLI browser
+        print STDERR "Print failed (first_cit)! $!\n" if $self->{debug} and not $success;
         while ($$ref =~ m#(.*?)(?:\x02|$)#gs)
         {
             $success = print $1;
