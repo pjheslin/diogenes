@@ -475,7 +475,17 @@ sub new
     # doing the reading.
 
     %{ $self } = ( %{ $self }, %defaults, $self->read_config_files, %args );
-    
+
+    # If the directories are set as environment variables, they take precedence
+    if    ($args{type} eq 'tlg' and exists $ENV{TLG_DIR}) {
+      $self->{tlg_dir} = $ENV{TLG_DIR};
+    }
+    elsif ($args{type} eq 'phi' and exists $ENV{PHI_DIR}) {
+      $self->{phi_dir} = $ENV{PHI_DIR};
+    }
+    elsif ($args{type} eq 'ddp' and exists $ENV{DDP_DIR}) {
+      $self->{ddp_dir} = $ENV{DDP_DIR};
+    }
     my @dirs = qw/tlg_dir phi_dir ddp_dir tll_pdf_dir old_pdf_dir/;
 
     # Make sure all the directories end in a '/' (except for empty
