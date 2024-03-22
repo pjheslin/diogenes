@@ -28,7 +28,8 @@
 #                                                                                 #
 ###################################################################################
 
-BEGIN { push @INC, '.' }
+use FindBin qw($Bin);
+use lib $Bin;
 use Diogenes::Base qw(%encoding %context @contexts %choices %work %author);
 use Diogenes::Search;
 use Diogenes::Indexed;
