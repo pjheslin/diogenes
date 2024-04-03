@@ -8,6 +8,7 @@ use Symbol;
 use POSIX;
 use FindBin qw($Bin);
 use File::Spec::Functions qw(:ALL);
+push @INC, '.';
 # Use local CPAN
 use lib ($Bin, catdir($Bin, '..', 'dependencies', 'CPAN') );
 use HTTP::Daemon;
@@ -15,7 +16,6 @@ use HTTP::Request;
 use HTTP::Status;
 use Net::Domain qw(hostfqdn);
 
-push @INC, '.';
 use Diogenes::Perseus;
 my $debug = 0;
 # my $HOST = 'localhost';
