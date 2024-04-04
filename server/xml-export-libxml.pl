@@ -24,6 +24,11 @@ use XML::LibXML qw(:libxml);
 use File::Which;
 
 push @INC, '.';
+use FindBin qw($Bin);
+use File::Spec::Functions;
+# Use local CPAN
+use lib ($Bin, File::Spec->catdir($Bin, '..', 'dependencies', 'CPAN') );
+
 use Diogenes::Base qw(%work %author %work_start_block %level_label
                       %database);
 use Diogenes::Browser;

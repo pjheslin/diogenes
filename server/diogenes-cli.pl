@@ -28,8 +28,11 @@
 #                                                                                 #
 ###################################################################################
 
+push @INC, '.';
 use FindBin qw($Bin);
-use lib $Bin;
+use File::Spec::Functions qw(:ALL);
+use lib ($Bin, catdir($Bin, '..', 'dependencies', 'CPAN') );
+
 use Diogenes::Base qw(%encoding %context @contexts %choices %work %author);
 use Diogenes::Search;
 use Diogenes::Indexed;
