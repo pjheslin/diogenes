@@ -175,7 +175,7 @@ function createFirstWindow () {
     // Set the Content Security Policy headers
     session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
 	callback({ responseHeaders: Object.assign({
-	    "Content-Security-Policy": [ "default-src 'self' logeion.uchicago.edu *.logeion.org 'unsafe-inline'" ]
+	    "Content-Security-Policy": [ "default-src 'self' *.uchicago.edu *.logeion.org 'unsafe-inline'" ]
 	}, details.responseHeaders)})
     })
 
