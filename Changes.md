@@ -11,7 +11,6 @@
     * semi-persistent state for the splash screen;
     * facility to jump to a new passage in the work currently being read.
 * Added support for the the more recent TLL fascicles (from vols. 9.1 and 11.2).
-* Native version for recent Macs with Apple silicon processors.
 * Updated icon for Macs (thanks to Helge Baumann).
 * Very large search output is now split into pages to avoid crashing the browser.
 * Facility to search the headwords of ancient lexica (e.g. the Suda).

@@ -142,9 +142,9 @@ sub download {
     }
 
     if ($res->header("X-Died") || !$res->is_success) {
-	if (my $died = $res->header("X-Died")) {
-	    print "$died\n";
-	}
+        if (my $died = $res->header("X-Died")) {
+            print "$died\n";
+        }
         print "Transfer aborted, $filename kept\n";
     }
 }
