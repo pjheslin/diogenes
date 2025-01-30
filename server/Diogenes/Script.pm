@@ -768,6 +768,11 @@ $output{author_search} = sub
         $f->hr;
 
     my $retval = $q->do_search;
+    if ($q->{server_error}) {
+        $print_error_page->($q->{server_error});
+        return;
+    }
+
     $check_chunking->($retval, $q);
     $my_footer->();
 };
@@ -1070,6 +1075,11 @@ $output{search} = sub
         my $retval = $q->do_search;
         $check_chunking->($retval, $q);
     }
+    if ($q->{server_error}) {
+        $print_error_page->($q->{server_error});
+        return;
+    }
+
     $my_footer->();
 
 };
@@ -1087,6 +1097,10 @@ $output{browser} = sub
     $database_error->($q) if not $q->check_db;
 
     my %auths = $q->browse_authors($st{query});
+    if ($q->{server_error}) {
+        $print_error_page->($q->{server_error});
+        return;
+    }
     # Because they are going into form elements, and most browsers
     # do not allow HTML there.
     $strip_html->(\$_) for values %auths;
@@ -1157,6 +1171,10 @@ $output{browser_works} = sub
 
     my %auths = $q->browse_authors( $st{author} );
     my %works = $q->browse_works( $st{author} );
+    if ($q->{server_error}) {
+        $print_error_page->($q->{server_error});
+        return;
+    }
     $strip_html->(\$_) for (values %works, keys %works);
 
     # Skip ahead if there is just one work
@@ -1222,6 +1240,10 @@ $output{browser_passage} = sub
     print '<center><table><tr><td>';
 
     my @labels = $q->browse_location ($st{author}, $st{work});
+    if ($q->{server_error}) {
+        $print_error_page->($q->{server_error});
+        return;
+    }
     $st{levels} = $#labels;
 
     my $j = $#labels;
@@ -1325,6 +1347,11 @@ $output{browser_output} = sub
     if ($jumpTo or $previous_page eq 'browser_passage')
     {
         my ($begin_offset, $end_offset) = $q->seek_passage ($st{author}, $st{work}, @target);
+        if ($q->{server_error}) {
+            $print_error_page->($q->{server_error});
+            return;
+        }
+
         # When looking at the start of a work, don't browse back
         if (grep {!/^0$/} @target and not $q->{documentary})
         {

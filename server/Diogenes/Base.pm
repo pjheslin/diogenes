@@ -1468,8 +1468,11 @@ sub parse_idt
     my $i; 
     my $idt_buf = '';
     
-    sysopen IDT, $self->{cdrom_dir}.$file, 0 or 
+    unless (sysopen IDT, $self->{cdrom_dir}.$file, 0) {
+        print "IDT File Missing!\n";
         $self->barf("Could not open $self->{cdrom_dir}$file - $!");
+        return;
+    }   
     binmode IDT;
     
     while (my $len = sysread IDT, $idt_buf, 8192, length $idt_buf) 
@@ -1481,7 +1484,7 @@ sub parse_idt
         }
     }
     my $end = length $idt_buf;
-    close IDT or $self->barf("Could not close $file");
+    close IDT or warn "Could not close $file";
     
     undef $old_work_num;
     for ($i = 0; ($i < $end); $i++) 
@@ -3398,8 +3401,8 @@ sub numerically { $a <=> $b; }
 sub barf 
 {
     my $self = shift;
-    if ($self and $self->{dump_file})
-    {
+    my $msg = shift;
+    if ($self and $self->{dump_file}) {
         use Data::Dumper;
         open DUMP, ">$self->{dump_file}" or die ("Can't open dump file");
         #print DUMP Data::Dumper->Dump ([$self], ['Diogenes']);
@@ -3407,8 +3410,15 @@ sub barf
         print DUMP ${ $self->{buf} } if defined $self->{buf}; 
         close DUMP or die ("Can't close dump file");
     }
-    # We die here, and hope that the server will spawn another child.
-    confess shift;
+    ## Let error messages propagate up to the web interface
+    if ($Diogenes::Base::cgi_flag) {
+        $self->{server_error} = $msg || 'Server Error';
+        return;
+    }
+    else {
+        # We die here, and let server spawn another child.
+        confess $msg;
+    }
 }
 
 1;
