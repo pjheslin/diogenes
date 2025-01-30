@@ -427,6 +427,7 @@ sub read_tlg_chronology {
     my $chron_file = File::Spec->catpath( $vol, $dir, 'tlg-chronology.txt');
     open my $chron_fh, "<$chron_file" or die "Could not open $chron_file: $!";
     local $/ = "\n";
+    my $missing = 0;
     while (<$chron_fh>) {
         if (m/^(\d\d\d\d)\s+(.*?)$/) {
             my $num = $1;
@@ -440,12 +441,17 @@ sub read_tlg_chronology {
                 $self->{tlg_chron_info}{$num} = $date;
             }
             else {
-                warn "Missing TLG file: $filename\n";
+                $missing++;
+                warn "Missing TLG file: $filename\n" if $self->{debug};
             }
         }
         else {
             die "Badly formed line in $chron_file: $_";
         }
+    }
+    if ($missing) {
+        warn "Number of files missing from TLG version E: $missing";
+        $self->{tlg_files_missing} = $missing;
     }
 }
 

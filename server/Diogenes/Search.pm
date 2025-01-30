@@ -231,6 +231,14 @@ sub print_totals
     $out .= '(' . $self->{blacklisted_files} .
         " blacklisted authors were not searched at all)\n" 
         if $self->{blacklisted_files};
+    if ($self->{tlg_files_missing}) {
+        $out .= "Number of files missing from TLG database (version E): " .
+            $self->{tlg_files_missing} . "\n"
+    }
+    if ($self->{phi_files_missing}) {
+        $out .= "Number of files missing from PHI database: " .
+            $self->{phi_files_missing} . "\n"
+    }
     $out .= "\n";
     $self->print_output(\$out);
 }
