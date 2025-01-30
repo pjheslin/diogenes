@@ -730,24 +730,55 @@ sub check_db
     my $file = File::Spec->catfile($self->{cdrom_dir}, $self->{authtab});
     my $check = check_authtab($file);
 
-    # Fix up the case where the "lat" prefix is wrong.
-    if ($check and $self->{type} eq 'phi'
-        and not -e File::Spec->catfile($self->{cdrom_dir}, $self->{file_prefix}.'0474'.$self->{txt_suffix})) {
-        my $pre;
-        # Look for Cicero
-        foreach (qw(lat LAT phi PHI)) {
-            if (-e File::Spec->catfile($self->{cdrom_dir}, $_.'0474'.$self->{txt_suffix})) {
-                $pre = $_;
-                last;
+    if ($check and $self->{type} eq 'phi') {
+        # Fix up the case where the "lat" prefix is wrong.
+        # Can we find Cicero? If not, try other prefixes
+        if (not -e File::Spec->catfile($self->{cdrom_dir}, $self->{file_prefix}.'0474'.$self->{txt_suffix})) {
+            my $pre;
+            foreach (qw(lat LAT phi PHI)) {
+                if (-e File::Spec->catfile($self->{cdrom_dir}, $_.'0474'.$self->{txt_suffix})) {
+                    $pre = $_;
+                    last;
+                }
+            }
+            if ($pre) {
+                $self->{file_prefix} = $pre;
+            }
+            else {
+                warn 'Found authtab, but could not find Cicero!';
             }
         }
-        if ($pre) {
-            $self->{file_prefix} = $pre;
+        # Inventory of TLG files is done in the chronology code, so we do a
+        # quick check of the PHI files here.
+        my ($vol, $dir, $file) = File::Spec->splitpath(module_path('Diogenes::Base'));
+        my $phi_file_list = File::Spec->catpath( $vol, $dir, 'phi_files.txt');
+        open my $phi_fh, "<$phi_file_list" or die "Could not open $phi_file_list: $!";
+        local $/ = "\n";
+        my $missing = 0;
+        while (<$phi_fh>) {
+            if (m/^(\d\d\d\d)\t(.*?)$/) {
+                my $num = $1;
+                my $len = $2;
+                my $filename = $self->{file_prefix}.$num.$self->{txt_suffix};
+                my $path = File::Spec->catpath("", $self->{phi_dir}, $filename);
+                if (-e $path) {
+                    unless (-s $path == $len) {
+                        warn "Apparently damaged PHI file: $filename";
+                    }
+                }
+                else {
+                    $missing++;
+                    warn "Missing PHI file: $filename\n" if $self->{debug};
+                }
+            }
+            else {
+                die "Badly formed line in $phi_file_list: $_";
+            }
         }
-        else {
-            $self->barf('Found authtab, but could not find Cicero!');
-            return undef;
-        }
+        if ($missing) {
+            warn "Number of files missing from PHI Latin database: $missing";
+            $self->{phi_files_missing} = $missing;
+        }       
     }
     return $check;
 }
