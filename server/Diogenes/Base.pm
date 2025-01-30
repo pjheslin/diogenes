@@ -755,6 +755,7 @@ sub check_db
         open my $phi_fh, "<$phi_file_list" or die "Could not open $phi_file_list: $!";
         local $/ = "\n";
         my $missing = 0;
+        my $damaged = 0;
         while (<$phi_fh>) {
             if (m/^(\d\d\d\d)\t(.*?)$/) {
                 my $num = $1;
@@ -763,6 +764,7 @@ sub check_db
                 my $path = File::Spec->catpath("", $self->{phi_dir}, $filename);
                 if (-e $path) {
                     unless (-s $path == $len) {
+                        $damaged++;
                         warn "Apparently damaged PHI file: $filename";
                     }
                 }
@@ -778,6 +780,10 @@ sub check_db
         if ($missing) {
             warn "Number of files missing from PHI Latin database: $missing";
             $self->{phi_files_missing} = $missing;
+        }       
+        if ($damaged) {
+            warn "Number of files damaged in PHI Latin database: $damaged";
+            $self->{phi_files_damaged} = $damaged;
         }       
     }
     return $check;

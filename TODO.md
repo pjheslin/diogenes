@@ -1,11 +1,8 @@
 # For next release
-## Database error
-Give better error message (in app) when there is a database error
 ## Fix Mac security issue
 Get developer account; notarize app
 ## Distribute Apple silicon version on website.
 Could not do this previously, because gatekeeper complains.
-## Fix Logeion bug
 ## Fix failure to download TLL PDFs
 ## Fix date of Antimachus
 ## Make external PDF viewer configurable
@@ -24,7 +21,7 @@ and don’t show the file chooser on the splash page when not running under elec
 ## Add switch to xml-export.pl to force treating texts as prose or verse.
 ## Remove the cruft of the 2 Perseus XML files from the app.
 ## Add simple API to link to external dictionaries (e.g Lectus)
-Perhaps also remove gcide and make links to all English words link to the API instead, which could provide translations in the user&rsquo;s own language.
+Perhaps also remove gcide and make links to all English words link to the API instead, which could provide translations in the user’s own language.
 Also provide ability to use e.g. second edition of the OLD. 
 ## Change prebuilt-data repo to use git-lfs (and my ssh key)
 ## Add dark mode option.

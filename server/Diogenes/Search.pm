@@ -239,6 +239,10 @@ sub print_totals
         $out .= "Number of files missing from PHI database: " .
             $self->{phi_files_missing} . "\n"
     }
+    if ($self->{phi_files_damaged}) {
+        $out .= "Number of files damaged in PHI database: " .
+            $self->{phi_files_damaged} . "\n"
+    }
     $out .= "\n";
     $self->print_output(\$out);
 }
