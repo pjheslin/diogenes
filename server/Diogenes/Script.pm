@@ -48,7 +48,7 @@ BEGIN {
 # $setup->().
 
 my ($f, $init, $filter_file, $default_encoding, $default_choice,
-    $default_criteria, $filter_flag, $charset);
+    $default_criteria, $filter_flag, $charset, $external_pdf_viewer);
 
 # These are lexical constants whose values are fixed.
 
@@ -262,6 +262,10 @@ my $print_title = sub
     print $f->hidden( -name => 'JumpFromAction',
                       -default => "",
                       -override => 0 );
+
+    print $f->hidden( -name => 'externalPdfViewer',
+                      -default => $external_pdf_viewer,
+                      -override => 1 );
 
     # for Perseus data
     print qq{<div id="sidebar" class="sidebar-$init->{perseus_show}"></div>};
@@ -2261,6 +2265,7 @@ my $setup = sub {
 
     $default_encoding = $init->{cgi_default_encoding} || 'UTF-8';
     $default_criteria = $init->{default_criteria};
+    $external_pdf_viewer = $init->{external_pdf_viewer};
 
     $ENV{PATH} = "/bin/:/usr/bin/";
     $| = 1;

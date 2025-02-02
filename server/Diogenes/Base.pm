@@ -301,6 +301,9 @@ my %defaults = (
     chunk_size => 1000000,
     seen_author_list => [],
     hits => 0,
+
+    # Only applicable for Electron app
+    external_pdf_viewer => 'false'
     );
 
 sub validate

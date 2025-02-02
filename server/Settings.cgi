@@ -23,8 +23,13 @@ my $d = new Diogenes::Base(-type => 'none');
 my $rcfile = $d->{auto_config};
 my $config_file = $d->{user_config};
 
+## NB. All settings that can be set within the Electron app also need
+## to be settable here, otherwise we will overwrite and remove them
+## here.
+
 my @fields = qw(context cgi_default_encoding perseus_show browse_lines
-                input_encoding tlg_dir phi_dir ddp_dir) ;
+                input_encoding tlg_dir phi_dir ddp_dir external_pdf_viewer
+                tll_pdf_dir old_pdf_dir) ;
 
 my %perseus_labels = (popup => "Pop up a new window",
                       split => "Split window",
@@ -120,6 +125,30 @@ my $display_splash = sub
                                 -maxlength=>100,
                                 -Default=>$d->{ddp_dir}))
          ),
+         $q->Tr
+         (
+          $q->th({align=>'right'}, 'Prefer external PDF viewer?'),
+          $q->td($q->popup_menu(-name=>'external_pdf_viewer',
+                                -Values=>['true', 'false'],
+                                -Default=>$d->{external_pdf_viewer}))
+         ),
+         $q->Tr
+         (
+          $q->th({align=>'right'}, 'The location of the TLL PDFs:'),
+          $q->td($q->textfield( -name=>'tll_pdf_dir',
+                                -size=>40,
+                                -maxlength=>100,
+                                -Default=>$d->{tll_pdf_dir}))
+         ),
+         $q->Tr
+         (
+          $q->th({align=>'right'}, 'The location of the OLD PDF:'),
+          $q->td($q->textfield( -name=>'old_pdf_dir',
+                                -size=>40,
+                                -maxlength=>100,
+                                -Default=>$d->{old_pdf_dir}))
+         ),
+
         ),
           $q->p('To enable new settings, click below'),
           $q->table($q->Tr($q->td(
@@ -189,12 +218,13 @@ my $write_changes = sub
     print RC $file;
     close RC or die "Can't close $rcfile: $!\n";
 
+    # External PDF viewer setting requires reloading app
     print $q->start_html(-title=>'Settings confirmed',
                          -bgcolor=>'#FFFFFF'), 
     $q->center(
         $q->h1('Settings changed'),
-        $q->p("Your new settings are now in effect, and have been written to this file:<br>$rcfile"),
-        $q->p('You may now close this window.')),
+        $q->p("Your new settings have been written to this file:<br>$rcfile"),
+        $q->p('You may need to reload the app for some settings to take effect. You may now close this window.')),
     $q->end_html;                  
 };
 

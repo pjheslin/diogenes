@@ -765,8 +765,8 @@ app.whenReady().then( () => {
   ipcMain.handle('cssRevertFont', async (event) => {
     return cssRevertFont()
   })
-  ipcMain.handle('showPDF', async (event, path) => {
-    return showPDF(path)
+  ipcMain.handle('showPDF', async (event, path, external) => {
+    return showPDF(path, external)
   })
 
   ipcMain.handle('getFonts', getFonts)
@@ -1000,7 +1000,12 @@ function tllFileMapRead () {
 }
   
 // Select type of PDF
-function showPDF (pseudoUrl) {
+function showPDF (pseudoUrl, external) {
+  if (external == 'true') { // a string, not a boolean
+    localURL = 'http://localhost:' + dioSettings.port + '/' + pseudoUrl
+    require('electron').shell.openExternal(localURL)
+    return
+  }
   var m = pseudoUrl.match(/^tll-pdf\/(.*?)\.pdf/)
   if (m) {
     vol = m[1]

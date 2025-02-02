@@ -11,7 +11,7 @@ contextBridge.exposeInMainWorld('electron', {
   cssReadFont: () => ipcRenderer.invoke('cssReadFont'),
   cssRevertFont: () => ipcRenderer.invoke('cssRevertFont'),
   getFonts: () => ipcRenderer.invoke('getFonts'),
-  showPDF: (path) => ipcRenderer.invoke('showPDF', path),
+  showPDF: (path, external) => ipcRenderer.invoke('showPDF', path, external),
   // Not used yet, but might be useful 
   saveFile: () => ipcRenderer.invoke('saveFile'),
   printToPDF: () => ipcRenderer.invoke('printToPDF')
