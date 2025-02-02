@@ -4,16 +4,16 @@ Get developer account; notarize app
 ## Distribute Apple silicon version on website.
 Could not do this previously, because gatekeeper complains.
 ## Fix failure to download TLL PDFs
-## Fix date of Antimachus
 ## Make external PDF viewer configurable
 I have a question regarding the display of OLD/TLL pdfs. In the current version, Diogenes opens these pdfs in my standard browser Safari anymore but in an own pdf reader window. While this generally works fine, the former Safari experience suited my workflow better for various reasons (Tabs; no reload of the pdf during successive look up; much faster). Hence my question: Can I change the pdf viewer/browser in the advanced settings and go back to Safari?
+## Update Electron version
 
 # Bugs (Github)
 ## Test -H option on server
 ## Weird bug 
 Weird side effect in searching for an i with umlaut, as printed in aquaï, auraï. If searching for a word like that, it finds me particular zeros in the texts. I noticed that the forms do show up nicely as result for aquai (etc) searches and get the correct parse.
 
-# Priority to-do items
+# Future to-do items
 ## Add link to Settings.cgi when not running under Electron.
 ## Add setting for xml-export path in Settings.cgi
 and don’t show the file chooser on the splash page when not running under electron, as it doesn’t work

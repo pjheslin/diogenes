@@ -468,7 +468,7 @@ sub new
     $args{ validate($_) } = $passed{$_} foreach keys %passed;
 
     my $user_config_dir = get_user_config_dir;
-    # For prefs saved by Electron.js and Settings.cgi
+    # For prefs saved by Electron and Settings.cgi
     $self->{auto_config} = File::Spec->catfile($user_config_dir, 'diogenes.prefs');
     # For manual editing by the user
     $self->{user_config} = File::Spec->catfile($user_config_dir, 'diogenes.config');

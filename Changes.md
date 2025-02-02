@@ -1,5 +1,9 @@
 # Changes in Version 4 of Diogenes
 
+## 4.7
+- More helpful error messages when files in databases are missing or damaged.
+- Logeion links work again.
+
 ## 4.6
 
 * Browser front-end updated to Electon version 20 (from version 5):
@@ -24,7 +28,7 @@
 * Removed problematic code that sometimes interfered with finding
   citations in very short or fragmentary texts.
 
-### Changes implemented earlier but not released
+### Changes implemented earlier but not released then
 * TLG search results are now presented in (rough) chronological order
   (with huge thanks to Jiang Qian for his assistance).
 * Multiple search feature now permits looking for the repetition of
