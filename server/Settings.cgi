@@ -127,7 +127,7 @@ my $display_splash = sub
          ),
          $q->Tr
          (
-          $q->th({align=>'right'}, 'Prefer external PDF viewer?'),
+          $q->th({align=>'right'}, 'In app, prefer external PDF viewer?'),
           $q->td($q->popup_menu(-name=>'external_pdf_viewer',
                                 -Values=>['true', 'false'],
                                 -Default=>$d->{external_pdf_viewer}))

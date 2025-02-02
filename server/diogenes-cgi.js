@@ -9,8 +9,15 @@ function stopSpinningCursor() {
 window.addEventListener("load", function() {
   stopSpinningCursor();
   addListeners()
-  // If we have jumped to a passage from a lexicon, show that entry again after loading.
+
+  if (!isElectron()) {
+    var settings = document.getElementById('settings-non-electron')
+    settings.innerHTML = '<p>View or change <a href="Settings.cgi">current settings</a>.</p.'
+  }
+
   var dio_form = document.getElementById("form");
+
+  // If we have jumped to a passage from a lexicon, show that entry again after loading.
   if (dio_form.JumpFromShowLexicon &&
       dio_form.JumpFromShowLexicon.value == 'yes') {
     jumpFrom();

@@ -4,6 +4,7 @@
 - More helpful error messages when files in databases are missing or damaged.
 - Logeion links work again.
 - Added option to open PDFs in system browser rather than inside Diogenes app.
+- Added link to settings page when running outside Electron app.
 
 ## 4.6
 

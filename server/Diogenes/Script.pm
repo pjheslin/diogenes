@@ -430,6 +430,7 @@ $output{splash} = sub
     print $f->div({-class=>'info-area', -id=>'info'},
                   $f->p({class => "homewelcome"},
                    q{Welcome to Diogenes, a tool for reading and searching through legacy databases of ancient texts.}));
+    print '<div id="settings-non-electron" class="homewelcome"></div>';
     print "\n";
     $my_footer->();
 };

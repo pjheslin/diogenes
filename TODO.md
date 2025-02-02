@@ -11,7 +11,6 @@ Could not do this previously, because gatekeeper complains.
 ## Weird bug 
 Weird side effect in searching for an i with umlaut, as printed in aquaï, auraï. If searching for a word like that, it finds me particular zeros in the texts. I noticed that the forms do show up nicely as result for aquai (etc) searches and get the correct parse.
 ## Remove the cruft of the 2 Perseus XML files from the app.
-## Add link to Settings.cgi when not running under Electron.
 ## Add setting for xml-export path in Settings.cgi
 and don’t show the file chooser on the splash page when not running under electron, as it doesn’t work
 
