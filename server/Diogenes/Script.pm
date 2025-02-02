@@ -202,7 +202,9 @@ my $my_footer = sub
     print $f->end_form,
         '<div class="push"></div></div>'; # sticky footer
     print
-        $f->p({class => 'footer'}, qq{Diogenes (version $version) is free software, &copy; 1999-2019 Peter Heslin.});
+        $f->p({class => 'footer'}, '<span id="settings-non-electron" class="footer"></span>' . qq{Diogenes (version $version) is free software, &copy; 1999-2025 Peter Heslin.});
+
+
 
     print $f->end_html;
 };
@@ -430,7 +432,6 @@ $output{splash} = sub
     print $f->div({-class=>'info-area', -id=>'info'},
                   $f->p({class => "homewelcome"},
                    q{Welcome to Diogenes, a tool for reading and searching through legacy databases of ancient texts.}));
-    print '<div id="settings-non-electron" class="homewelcome"></div>';
     print "\n";
     $my_footer->();
 };

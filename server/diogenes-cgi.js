@@ -12,7 +12,7 @@ window.addEventListener("load", function() {
 
   if (!isElectron()) {
     var settings = document.getElementById('settings-non-electron')
-    settings.innerHTML = '<p>View or change <a href="Settings.cgi">current settings</a>.</p.'
+    settings.innerHTML = 'View or change <a href="Settings.cgi">current settings</a>.<br/>'
   }
 
   var dio_form = document.getElementById("form");
