@@ -32,6 +32,9 @@ const winopts = {icon: path.join(app.getAppPath(), 'assets', 'icon.png')}
 const settingsPath = app.getPath('userData')
 const winStatePath = path.join(settingsPath, 'windowstate.json')
 const prefsFile = path.join(settingsPath, 'diogenes.prefs')
+const cssConfigFile = path.join(settingsPath, 'config.css')
+
+
 
 const versionFile = path.resolve(__dirname, 'version.js')
 var currentVersion = "0.0"
@@ -786,9 +789,6 @@ function findTextRemote (string, direction) {
    
 // Support for firstrun (db settings) page
 
-var dioSettingsFile = path.join(settingsPath, 'diogenes.prefs')
-var cssConfigFile = path.join(settingsPath, 'config.css')
-
 const dbs = ['PHI', 'TLG', 'DDP', 'TLL_PDF', 'OLD_PDF']
 
 function firstrunSetupMain() {
@@ -798,7 +798,7 @@ function firstrunSetupMain() {
   }
   // Read existing db settings
   try {
-    data = fs.readFileSync(dioSettingsFile, 'utf8')
+    data = fs.readFileSync(prefsFile, 'utf8')
   } catch(e) {
     data = null
   }
@@ -820,7 +820,7 @@ function writeToSettings (dbName, folderPath) {
     return
   }
   try {
-    data = fs.readFileSync(dioSettingsFile, 'utf8')
+    data = fs.readFileSync(prefsFile, 'utf8')
   } catch(e) {
     data = '# Created by Diogenes'
   }
@@ -833,7 +833,7 @@ function writeToSettings (dbName, folderPath) {
   } else {
     newData = `${data}\n${newLine}`
   }
-  fs.writeFileSync(dioSettingsFile, newData)
+  fs.writeFileSync(prefsFile, newData)
 }
 
 function authtabExists (folderPath)  {
@@ -877,7 +877,7 @@ function printToPDF () {
 
 function getTLLpath () {
   try {
-    var data = fs.readFileSync(dioSettingsFile, 'utf8')
+    var data = fs.readFileSync(prefsFile, 'utf8')
   } catch(e) {
     dialog.showMessageBoxSync({
       type: 'error',
@@ -1094,7 +1094,7 @@ function showOLD (pseudoUrl) {
 
 function getOLDpath () {
   try {
-    var data = fs.readFileSync(dioSettingsFile, 'utf8')
+    var data = fs.readFileSync(prefsFile, 'utf8')
   } catch(e) {
     dialog.showMessageBoxSync({
       type: 'error',
