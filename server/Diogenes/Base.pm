@@ -858,7 +858,7 @@ sub set_handlers
     }
     else 
     {
-        die "I don't know what to do with $self->{encoding}!\n";
+        barf("I don't know what to do with $self->{encoding}!\n");
     }
 
     $self->{perseus_morph} = 0 ; 

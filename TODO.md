@@ -19,6 +19,7 @@ Also provide ability to use e.g. second edition of the OLD.
 ## Add dark mode option.
 ## Add citation info from authtab.xml to exported XML files.
 ## Import font_fixes from xml-export into desktop display
+## Fix unicode input for Latin to search for accented words
 
 # Possible long-term to-do items
 ## Migrate from Electron to Tauri.

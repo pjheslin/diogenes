@@ -5,6 +5,7 @@
 - Logeion links work again.
 - Added option to open PDFs in system browser rather than inside Diogenes app.
 - Added link to settings page when running outside Electron app.
+- Fix setting of XML export folder so export works outside Electron app.
 
 ## 4.6
 
