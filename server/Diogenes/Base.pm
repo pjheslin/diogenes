@@ -1733,7 +1733,8 @@ sub read_phi_biblio
     my $filename = "$self->{cdrom_dir}$self->{file_prefix}9999.txt";
     if (-e "$filename")
     {
-        local undef $/;
+        local $/;
+        undef $/;
         open PHI_BIB, $filename or die "Couldn't open $filename: $!";
         binmode PHI_BIB;
         my $canon = <PHI_BIB>;
