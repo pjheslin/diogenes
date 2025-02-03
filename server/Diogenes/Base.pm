@@ -303,7 +303,9 @@ my %defaults = (
     hits => 0,
 
     # Only applicable for Electron app
-    external_pdf_viewer => 'false'
+    external_pdf_viewer => 'false',
+
+    xml_export_dir => ''
     );
 
 sub validate

@@ -1,4 +1,4 @@
-const dbs = ['PHI', 'TLG', 'DDP', 'TLL_PDF', 'OLD_PDF']
+const dbs = ['PHI', 'TLG', 'DDP', 'TLL_PDF', 'OLD_PDF', 'XML_EXPORT']
 
 async function firstrunSetup () {
   data = await window.electron.firstrunSetupMain()
@@ -55,7 +55,8 @@ async function showPath(dbName, folderPath) {
   document.getElementById(`${dbName}path`).innerHTML = folderPath
   checkmark = document.getElementById(`${dbName}ok`)
   
-  if (authtabExists || dbName == 'TLL_PDF' || dbName == 'OLD_PDF') {
+  if (authtabExists || dbName == 'TLL_PDF' || dbName == 'OLD_PDF' ||
+      dbName == 'XML_EXPORT') {
     checkmark.innerHTML = '✓'
     checkmark.classList.remove('warn')
     checkmark.classList.add('valid')

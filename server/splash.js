@@ -1,5 +1,5 @@
 // Dynamic splash-page with sticky choices.  Requires html5
-var corpus, query, author, exportPath;
+var corpus, query, author;
 
 // Is localStorage available?
 var lsTest = function(){
@@ -102,16 +102,8 @@ function splashPerseus (action) {
     }
 }
 
-async function XMLPathSelect () {
-  exportPath = await window.electron.exportPathPick()
-  localStorage.setItem("exportPath", exportPath)
-  document.getElementById("export-path").value = exportPath
-  info('export')
-}
-
 var infoText = {};
-var exportText1;
-var exportText2;
+var exportText1, exportText2
 
 function info (choice) {
     // Hide all submenus
@@ -119,24 +111,24 @@ function info (choice) {
     dropup('submenu2');
 
     if (document.getElementById("corpus_menu")) {
-        corpus = document.getElementById("corpus_menu").value;
+        corpus = document.getElementById("corpus_menu").value
     }
     if (document.getElementById("query_text")) {
-        query = document.getElementById("query_text").value;
+        query = document.getElementById("query_text").value
     }
     if (document.getElementById("author_text")) {
-        author = document.getElementById("author_text").value;
+        author = document.getElementById("author_text").value
     }
     if (choice == 'export') {
-        if (exportPath && exportPath != "null") {
+      exportDir = document.getElementById("xml-export-dir").value
+        if (exportDir && exportDir != "null") {
             infoText['export'] = exportText1 +
-                '<p class="info-field"><a href="#" onclick="XMLPathSelect()">Output Folder: ' + exportPath + '</a></p>' +
-                exportText2 + '<p align="center"><input class="info-button" type="submit" name="go" value="Export Texts"></p>';
+                '<p class="info-field">Output Folder: ' + exportDir + '</p>' +
+                exportText2 + '<p align="center"><input class="info-button" type="submit" name="go" value="Export Texts"></p>'
         }
         else {
-            infoText['export'] = exportText1 +
-                '<p class="info-field">Output Folder: <a href="#" onclick="XMLPathSelect()"><span style = "color:red">Undefined</span></a></p>' +
-                exportText2 + '<p class="info-text">You must <a href="#" onclick="XMLPathSelect()">select the folder</a> into which the directory with the XML files will be placed.</p>';
+            infoText['export'] = exportText1 + '<p class="info-text">You must first specify in your settings the location of the folder into which the directory with the XML files will be placed.</p>' +                 
+            exportText2
         }
     }
 
@@ -186,11 +178,7 @@ function splash_setup () {
         corpus = localStorage.getItem("corpus");
         query = localStorage.getItem("query");
         author = localStorage.getItem("author");
-        exportPath = localStorage.getItem("exportPath");
         action = sessionStorage.getItem("action");
-    }
-    if (exportPath) {
-        document.getElementById("export-path").value = exportPath;
     }
     var corpora1 = document.getElementById("corpora-list1").innerHTML;
     var corpora2 = document.getElementById("corpora-list2").innerHTML;

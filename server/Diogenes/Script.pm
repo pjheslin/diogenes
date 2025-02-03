@@ -48,7 +48,8 @@ BEGIN {
 # $setup->().
 
 my ($f, $init, $filter_file, $default_encoding, $default_choice,
-    $default_criteria, $filter_flag, $charset, $external_pdf_viewer);
+    $default_criteria, $filter_flag, $charset, $external_pdf_viewer,
+    $xml_export_dir);
 
 # These are lexical constants whose values are fixed.
 
@@ -404,7 +405,7 @@ $output{splash} = sub
 
     print '<input type="hidden" name="action" id="action" value=""/>';
     print '<input type="hidden" name="splash" id="splash" value="true"/>';
-    print '<input type="hidden" name="export-path" id="export-path" value=""/>';
+    print qq{<input type="hidden" name="xml-export-dir" id="xml-export-dir" value="$xml_export_dir"/>};
     print "\n";
     print '<div id="corpora-list1">';
     foreach (@choices) {
@@ -703,9 +704,8 @@ $output{export_xml} = sub {
         }
     }
 
-    my $export_path = $st{'export-path'};
     print $f->h2('Exporting texts as XML'),
-        $f->p("This can take a while. Go to menu item Navigate -> Stop/Kill to interrupt conversion. Export folder: $export_path"),
+        $f->p("This can take a while. Go to menu item Navigate -> Stop/Kill to interrupt conversion. Export folder: $xml_export_dir"),
         $f->hr;
 
     # TODO: Should have just used $^X
@@ -725,7 +725,7 @@ $output{export_xml} = sub {
     push @cmd, '-c';
     push @cmd, $st{short_type};
     push @cmd, '-o';
-    push @cmd, $export_path;
+    push @cmd, $xml_export_dir;
     if (@auths) {
         my $n = join ',', @auths;
         push @cmd, '-n';
@@ -2268,7 +2268,8 @@ my $setup = sub {
     $default_encoding = $init->{cgi_default_encoding} || 'UTF-8';
     $default_criteria = $init->{default_criteria};
     $external_pdf_viewer = $init->{external_pdf_viewer};
-
+    $xml_export_dir = $init->{xml_export_dir};
+    
     $ENV{PATH} = "/bin/:/usr/bin/";
     $| = 1;
 

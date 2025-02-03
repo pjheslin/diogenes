@@ -29,7 +29,7 @@ my $config_file = $d->{user_config};
 
 my @fields = qw(context cgi_default_encoding perseus_show browse_lines
                 input_encoding tlg_dir phi_dir ddp_dir external_pdf_viewer
-                tll_pdf_dir old_pdf_dir) ;
+                tll_pdf_dir old_pdf_dir xml_export_dir) ;
 
 my %perseus_labels = (popup => "Pop up a new window",
                       split => "Split window",
@@ -148,6 +148,14 @@ my $display_splash = sub
                                 -maxlength=>100,
                                 -Default=>$d->{old_pdf_dir}))
          ),
+         $q->Tr
+         (
+          $q->th({align=>'right'}, 'Where to put exported XML files:'),
+          $q->td($q->textfield( -name=>'xml_export_dir',
+                                -size=>40,
+                                -maxlength=>100,
+                                -Default=>$d->{xml_export_dir}))
+         )
 
         ),
           $q->p('To enable new settings, click below'),

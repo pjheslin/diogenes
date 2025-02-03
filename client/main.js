@@ -358,17 +358,17 @@ function loadWhenLocked(lockFile, prefsFile, win) {
 
 // Check if a database folder has been set
 function checkDbSet(prefsFile) {
-	let s
-	try {
-		s = fs.readFileSync(prefsFile, 'utf8')
-	} catch(e) {
-		return false
-	}
-	let re = new RegExp('_dir .*')
-	if(re.test(s)) {
-		return true
-	}
-	return false
+  let s
+  try {
+    s = fs.readFileSync(prefsFile, 'utf8')
+  } catch(e) {
+    return false
+  }
+  let re = new RegExp('(phi|tlg|ddp)_dir .*')
+  if(re.test(s)) {
+    return true
+  }
+  return false
 }
 
 // Save window dimensions and state to a file
@@ -490,7 +490,7 @@ function initializeMenuTemplate () {
                     }
                 },
                 {
-                    label: 'Database Locations',
+                    label: 'Set Folder Locations',
                     accelerator: 'CmdOrCtrl+B',
                     click: (menu, win) => {
                         let newWin = createWindow(win, 20, 20)
@@ -789,7 +789,7 @@ function findTextRemote (string, direction) {
    
 // Support for firstrun (db settings) page
 
-const dbs = ['PHI', 'TLG', 'DDP', 'TLL_PDF', 'OLD_PDF']
+const dbs = ['PHI', 'TLG', 'DDP', 'TLL_PDF', 'OLD_PDF', 'XML_EXPORT']
 
 function firstrunSetupMain() {
   // Create settings dir, if necessary
