@@ -815,7 +815,7 @@ my $use_and_show_filter = sub
 
 my $input_encoding = sub {
     my $word = shift;
-    if ($word =~ m/^\p{InBasicLatin}+$/) {
+    if ($word =~ m/^\p{Script:Latin}+$/) {
         return ('lat', '')
     }
     else {

@@ -37,8 +37,8 @@ sub unicode_pattern {
     my $self = shift;
     my $pat = shift;
 
-    if ($pat =~ m/^\p{InBasicLatin}+$/) {
-        # All ascii
+    if ($pat =~ m/^[\p{Script:Latin}\p{Punct}\s]+$/) {
+        # All Latin chars (also accented)
         if (ref $self eq 'Diogenes::Search') {
             return $self->latin_pattern($pat);
         }
@@ -113,7 +113,7 @@ sub unicode_greek_to_beta {
         }
         else {
             warn "I don't know what to do with character $char in $pat\n";
-            return 0;
+            return;
         }
         my $temp = '';
         my @diacrits = split //, $diacrits;
