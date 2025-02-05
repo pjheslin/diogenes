@@ -255,6 +255,7 @@ sub seek_passage
         $code = ord (substr ($buf, ++$i, 1));
         next unless ($code >> 7);
         $self->parse_non_ascii (\$buf, \$i);
+        warn ".." . $self->{work_num} . "\n" if $self->{debug};     
     }
     if (0 + $self->{work_num} > 0 + $work)
     {
@@ -271,7 +272,7 @@ sub seek_passage
     }
     if (0 + $self->{work_num} != 0 + $work)
     {
-        die "Error: cannot find the start of the work\n";
+        barf("Error: cannot find the start of the work\n");
     }
     print STDERR "Search begins: $i \n" if $self->{debug};
 
