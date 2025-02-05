@@ -285,7 +285,13 @@ sub make_strict_greek_pattern
     $pat =~ tr/a-z/A-Z/;                    # upcap all letters
     $pat =~ s#\\#/#g;                       # normalize barytone accents
     $pat =~ s#\s+# #g;                      # normalize spacing
-
+    
+    # We remove all diaereses specified in the input, because the TLG
+    # word list strips out diaereses and thus our patterns must permit
+    # a diaeresis to appear after any letter. Explicit diaereses get
+    # in the way of matching, esp in cases of hyphenation.
+    $pat =~ s#\+##g;
+    
     my @pats;
     my $pattern;
     if ($pat =~ m/\s/) {
