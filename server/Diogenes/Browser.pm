@@ -243,6 +243,8 @@ sub seek_passage
         print STDERR "Searching entire work!\n" if $self->{debug} and not defined $block;
     }
     $block ||= 0;
+    # Catches some idt errors
+    $block = $start_block if $block < $start_block;
     my $starting_point = ($block - $start_block) << 13 if $block;
     $i = $starting_point || 0;
     $i--;
