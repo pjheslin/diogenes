@@ -567,7 +567,7 @@ $output{multiple} = sub
         $f->p('You may add a' . (@patterns ? 'nother' : '') . ' pattern:'),
             $f->p(
                 $f->textfield(-name=>'query', -size=>40, -default=>'',
-                              -override=>1)),
+                              -override=>1, -spellcheck=>'false')),
             $f->p(
                 $f->submit(-name=>'Add_Pattern',
                            -value=>'Add this pattern to the list'));
@@ -602,7 +602,7 @@ $output{multiple} = sub
         $f->p('Optionally, if there is a word or phrase whose presence in a given ',
               'context should cause a match to be rejected, specify it here.'),
         $f->textfield( -name => 'reject_pattern',
-                       -size => 50,
+                       -size => 50, -spellcheck => 'false',
                        -default => '');
     print
         $f->h2('Permit repetition'),
@@ -900,7 +900,7 @@ $output{lemmata} = sub {
               $f->br,
               $f->textfield(-name => 'form_filter',
                             -id => 'form_filter',
-                            -default => '',
+                            -default => '', -spellcheck => 'false',
                             -size => 25),
               '&nbsp;<a onClick="formFilter();">Go</a>');
 
@@ -1259,7 +1259,8 @@ $output{browser_passage} = sub
         my $lab = $lev;
         next if $lab =~ m#^\*#;
         $lab =~ s#^(.)#\U$1\E#;
-        %fields = ( -default => '0', -name => "level_$j", -size => 25 );
+        %fields = ( -default => '0', -name => "level_$j",
+                    -size => 25, -spellcheck => 'false');
         # autofocus first input box (HTML5) and select the 0 to easily overwrite it
         if ($j == $#labels) {
             $fields{'-autofocus'} = '';
@@ -1409,7 +1410,7 @@ $output{browser_output} = sub
                          -value=> 'Subsequent Text')),
             ' | Passage: ',
             $f->textfield( -name => 'citation_jump_loc',
-                           -size => 15,
+                           -size => 15, -spellcheck => 'false',
                            -onkeydown => "if (event.keyCode == 13) {document.getElementById('citationGo').click();event.returnValue=false;event.cancel=true;}" ),
             $f->submit( -name => 'citation_jump',
                         -value=> 'Go',
@@ -1481,7 +1482,8 @@ $output{filter_splash} = sub
                 $f->submit (-name=>'duplicate',
                             -value=>'Duplicate subset under new name: '),
                 $f->textfield( -name => 'duplicate_filter_name',
-                               -size => 60, -default => '')),
+                               -size => 60, -default => '',
+                               -spellcheck => 'false')),
 
         $f->p('<strong>N.B.</strong> To delete individual items from a
         corpus, choose "List contents" and you can do that on the next
@@ -1524,6 +1526,7 @@ $output{filter_splash} = sub
                       $f->th({align=>'right'}, 'Author name(s): '),
                       $f->td(
                           $f->textfield( -name => 'author_pattern',
+                                         -spellcheck => 'false',
                                          -size => 60, -default => ''))),
                   $f->Tr(
                       $f->th({align=>'right'}, 'Database: '),
@@ -1653,7 +1656,7 @@ the selected authors' );
             $f->td( $group[1] ),
             $f->td(
                 $f->textfield( -name => 'saved_filter_name',
-                               -size => 60,
+                               -size => 60, -spellcheck => 'false',
                                -default => '' ))));
 
     print $f->p($f->submit( -name =>'Proceed'));
@@ -1808,7 +1811,7 @@ $output{refine_works} = sub
     my $default_filter_name = $st{saved_filter_name} || '';
     print
         $f->textfield( -name => 'saved_filter_name',
-                       -size => 60,
+                       -size => 60, -spellcheck => 'false',
                        -default => $default_filter_name,
                        -required => 'required'),
         $f->p('&nbsp;'),
@@ -1890,7 +1893,7 @@ $output{tlg_filter} = sub
     $j++;
     print
         "<strong>$j. Name of Author(s):</strong><br>",
-        $f->textfield(-name=>'author_regex', -size=>25),
+        $f->textfield(-name=>'author_regex', -size=>25, -spellcheck => 'false'),
 
         '</td><td>',
         '<TABLE border=0><TR><TD colspan=2>';
@@ -2023,7 +2026,7 @@ $output{tlg_filter_results} = sub
     print
         $f->p('Please choose a name for this corpus before saving'),
         $f->textfield( -name => 'saved_filter_name',
-                       -size => 60,
+                       -size => 60, -spellcheck => 'false',
                        -default => '' ),
         $f->p('&nbsp'),
         $f->p($f->submit( -name =>'Save'));

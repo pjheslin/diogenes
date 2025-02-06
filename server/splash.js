@@ -192,45 +192,45 @@ function splash_setup () {
 
     infoText['browse'] = '<h2 class="info-h2">Read a Text</h2>' +
         '<p class="info-field">Corpus: ' + corporaCore +
-        '<p class="info-field">Author:<input type="text" name="author" size="30" id="author_text" class="info-field"><input type="submit" name="go" value="Go" class="info-field"></p>' +
+        '<p class="info-field">Author:<input type="text" name="author" size="30" id="author_text" class="info-field" spellcheck="false"><input type="submit" name="go" value="Go" class="info-field"></p>' +
         '<p class="info-text">Choose the relevant corpus, and then enter the name of an author (or part of the name, or the author\'s number or nickname).  Leave the space blank to choose from a list of all authors in the corpus.</p>';
 
     infoText['search'] = '<h2 class="info-h2">Simple Search</h2>' +
         '<p class="info-field">Corpus: ' + corporaAll + '</p>' +
-        '<p class="info-field">Pattern:<input type="text" name="query" size="40" id="query_text" class="info-field"><input type="submit" name="go" value="Go" class="info-field"></p>' +
+        '<p class="info-field">Pattern:<input type="text" name="query" size="40" id="query_text" class="info-field" spellcheck="false"><input type="submit" name="go" value="Go" class="info-field"></p>' +
         '<p class="info-text">Choose the relevant corpus, and then enter a pattern (word or sequence of words) to search for.  <b>NB.</b> To restrict a search to the beginning or end of a word, enter a space before or after the letters in your pattern.' + searchTooltip + '</p>';
 
     infoText['author'] = '<h2 class="info-h2">Search within Author(s)</h2>' +
         '<p class="info-field">Corpus: ' + corporaCore + '</p>' +
-        '<p class="info-field">Author: <input type="text" name="author" size="20" id="author_text" class="info-field"></p>' +
-        '<p class="info-field">Pattern:<input type="text" name="query" size="40" id="query_text" class="info-field"><input type="submit" name="go" value="Go" class="info-field"></p>' +
+        '<p class="info-field">Author: <input type="text" name="author" size="20" id="author_text" class="info-field" spellcheck="false"></p>' +
+        '<p class="info-field">Pattern:<input type="text" name="query" size="40" id="query_text" class="info-field" spellcheck="false"><input type="submit" name="go" value="Go" class="info-field"></p>' +
         '<p class="info-text">This is a simple search within the texts of selected author(s). Choose the relevant corpus, enter part of an author\'s name (all matching authors will be searched), and enter a pattern to search for.</p> <p>For finer-grained control over which authors and texts to search in and many more ways to select them, choose the <b>Filter</b> option above.' + searchTooltip + '</p>';
 
     infoText['multiple'] = '<h2 class="info-h2">Multiple Pattern Search</h2>' +
         '<p class="info-field">Corpus: ' + corporaAll + '</p>' +
-        '<p class="info-field">Pattern:<input type="text" name="query" size="40" id="query_text" class="info-field"><input type="submit" name="go" value="Go" class="info-field"></p>' +
+        '<p class="info-field">Pattern:<input type="text" name="query" size="40" id="query_text" class="info-field" spellcheck="false"><input type="submit" name="go" value="Go" class="info-field"></p>' +
         '<p class="info-text">Search for multiple terms in arbitrary order within a certain scope.  Enter the corpus to search in and the first of your search terms.  You will be able to add further terms in subsequent pages.' + searchTooltip + '</p>';
 
     infoText['lemma'] = '<h2 class="info-h2">Morphological Search</h2>' +
         '<p class="info-field">Corpus: ' + corporaAll + '</p>' +
-        '<p class="info-field">Pattern:<input type="text" name="query" size="40" id="query_text" class="info-field"><input type="submit" name="go" value="Go" class="info-field"></p>' +
+        '<p class="info-field">Pattern:<input type="text" name="query" size="40" id="query_text" class="info-field" spellcheck="false"><input type="submit" name="go" value="Go" class="info-field"></p>' +
         '<p class="info-text">Search for particular inflected forms of a given word.  Enter the corpus and (part of) a word in its dictionary form.</p>';
 
     infoText['word_list'] = '<h2 class="info-h2">TLG Word List Search</h2>' +
         '<p class="info-field">Corpus: ' + corporaAll + '</p>' +
-        '<p class="info-field">Pattern:<input type="text" name="query" size="40" id="query_text" class="info-field"><input type="submit" name="go" value="Go" class="info-field"></p>' +
+        '<p class="info-field">Pattern:<input type="text" name="query" size="40" id="query_text" class="info-field" spellcheck="false"><input type="submit" name="go" value="Go" class="info-field"></p>' +
         '<p class="info-text">The <i>TLG</i> has a word-list that serves as an index.  For narrow searches, using the word list can be faster; for big searches, it may be much slower.  Enter a word (without diacritics) to see matches from the word-list.  Put a space in front to match only at the beginning of words.</p>';
 
     infoText['lookup'] = '<h2 class="info-h2">Dictionary Lookup</h2>' +
-        '<p class="info-field">Word:<input type="text" name="query" size="40" id="query_text" class="info-field"><input type="submit" name="go" value="Go" class="info-field"></p>' +
+        '<p class="info-field">Word:<input type="text" name="query" size="40" id="query_text" class="info-field" spellcheck="false"><input type="submit" name="go" value="Go" class="info-field"></p>' +
         '<p class="info-text">Look up a word in the Greek lexicon of Liddel, Scott and Jones or in the Latin lexicon of Lewis and Short.  Use Greek letters to look up a Greek word and use Latin for Latin.</p>';
 
     infoText['parse'] = '<h2 class="info-h2">Parse an Inflected Form</h2>' +
-        '<p class="info-field">Word:<input type="text" name="query" size="40" id="query_text" class="info-field"><input type="submit" name="go" value="Go" class="info-field"></p>' +
+        '<p class="info-field">Word:<input type="text" name="query" size="40" id="query_text" class="info-field" spellcheck="false"><input type="submit" name="go" value="Go" class="info-field"></p>' +
         '<p class="info-text">Parse the morphology of an inflected word in Latin or Greek (using Greek letters to enter a Greek word).</p>';
 
     infoText['headwords'] = '<h2 class="info-h2">Search TLG Lexica Headwords</h2>' +
-        '<p class="info-field">Word:<input type="text" name="query" size="40" id="query_text" class="info-field"><input type="submit" name="go" value="Go" class="info-field"></p>' +
+        '<p class="info-field">Word:<input type="text" name="query" size="40" id="query_text" class="info-field" spellcheck="false"><input type="submit" name="go" value="Go" class="info-field"></p>' +
     '<p class="info-text">Search the headwords (and phrases) of the entries in various ancient Greek lexica from the TLG: Suda, Hesychius, etc.</p>';
   
     infoText['filters'] = '<h2 class="info-h2">Select subsets of texts</h2>' +
@@ -239,7 +239,7 @@ function splash_setup () {
 
     exportText1 = '<h2 class="info-h2">Export texts as XML</h2>' +
         '<p class="info-field">Corpus: ' + corporaAll + '</p>'+
-        '<p class="info-field">Optionally, select author(s): <input type="text" name="author" size="20" id="author_text" class="info-field"></p>'
+        '<p class="info-field">Optionally, select author(s): <input type="text" name="author" size="20" id="author_text" class="info-field" spellcheck="false"></p>'
     ;
     exportText2 = '<p class="info-text">' +
         'Export texts as TEI-compliant XML for use with other applications.  Choose your author(s) or the (sub)corpus to convert. This is a slow process, so you may wish to go first to <b>Filter</b> and define a subset of the authors you want to convert.</p>';
