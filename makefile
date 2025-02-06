@@ -10,8 +10,12 @@ CLOUDFRONTID=replace-this-id
 
 DIOGENESVERSION = $(shell grep "Diogenes::Base::Version" server/Diogenes/Base.pm | sed -n 's/[^"]*"\([^"]*\)"[^"]*/\1/p')
 
-ELECTRONVERSION = 20.0.0
-# ELECTRONVERSION = 5.0.6
+## NB. After downloading a new version of Electron, we have to do this
+## (for both architectures) before anything else:
+# xattr -r -d com.apple.quarantine electron/electron-v34.1.0-darwin-arm64/Electron.app
+ELECTRONVERSION = 34.1.0
+# ELECTRONVERSION = 20.0.0
+
 ENTSUM = 84cb3710463ea1bd80e6db3cf31efcb19345429a3bafbefc9ecff71d0a64c21c
 UNICODEVERSION = 7.0.0
 UNICODESUM = bfa3da58ea982199829e1107ac5a9a544b83100470a2d0cc28fb50ec234cb840
