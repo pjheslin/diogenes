@@ -115,7 +115,7 @@ function createWindow (oldWin, offset_x, offset_y, defaultPos) {
     }
   }
 
-  let win = new BrowserWindow({x: x, y: y, width: w, height: h,
+  let win = new BrowserWindow({x: x, y: y, width: w, height: h, spellcheck: false,
 	                       show: false, webPreferences: webprefs, winopts})
 
   if(winstate && winstate.maximzed) {
@@ -424,6 +424,7 @@ function makeFontWin (win) {
     frame: true,
     transparent: false,
     fullscreen: false,
+    spellcheck: false,
     webPreferences: webprefs
   })
 }
@@ -715,6 +716,7 @@ function findText (win) {
     frame: false,
     transparent: false,
     fullscreen: false,
+    spellcheck: false,
     webPreferences: webprefs
   })
   findWin.once('ready-to-show', () => {
