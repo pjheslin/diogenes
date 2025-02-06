@@ -149,25 +149,17 @@ function checkVersion (win) {
     .then( (oldVersion) => {
       if (oldVersion != currentVersion) {
         console.log('Old version: '+oldVersion+'; Current version: '+currentVersion)
-        // Not promisified yet in the Electron we are using, but will be soon
-        // win.webContents.session.clearCache()
-        //     .then( () => {
-        //         console.log('Deleted stale cache')
-        //         win.webContents.reload()
-        //     } )
-        //     .catch( (e) => {console.log('Failed to delete stale cache: '+e)} )
-        win.webContents.session.clearCache( () => {
-          console.log('Deleted stale cache')
-          win.webContents.reload()
-        } )
+        win.webContents.session.clearCache()
+          .then( () => {
+            console.log('Deleted stale cache')
+            win.webContents.reload()
+          } )
+          .catch( (e) => {console.log('Failed to delete stale cache: '+e)} )
+        win.webContents.reload()
         win.webContents.executeJavaScript('localStorage.setItem("diogenesVersion", '+'"'+currentVersion+'")')
           .then( () => {console.log('New version number saved')} )
           .catch( (e) => {console.log('Failed to save new version number: '+e)} )
-      }
-    })
-  // Errors from non-promisified clearCache fall through
-  // .catch( (e) => {console.log('Failed to get old version number: '+e)} )
-    .catch( (e) => {console.log('checkVersion failed: '+e)} )
+      }})
 }
 
 // Create the initial window and start the diogenes server
