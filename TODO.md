@@ -4,9 +4,6 @@ Get developer account; notarize app
 ## Distribute Apple silicon version on website.
 Could not do this previously, because gatekeeper complains.
 ## Fix failure to download TLL PDFs
-## Update Electron version
-
-# Bugs (Github)
 ## Test -H option on server
 ## Remove the cruft of the 2 Perseus XML files from the app.
 
