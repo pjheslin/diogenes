@@ -55,8 +55,8 @@ my $resources = 'Diogenes-Resources';
 
 $Getopt::Std::STANDARD_HELP_VERSION = 1;
 sub VERSION_MESSAGE {print "xml-export.pl, Diogenes version $Diogenes::Base::Version\n"}
-getopts ('alprho:c:sn:N:vdetxP');
-our ($opt_a, $opt_l, $opt_p, $opt_c, $opt_r, $opt_h, $opt_o, $opt_s, $opt_v, $opt_d, $opt_n, $opt_e, $opt_t, $opt_x, $opt_N, $opt_P);
+getopts ('alprho:c:sn:N:vdetxPyY');
+our ($opt_a, $opt_l, $opt_p, $opt_c, $opt_r, $opt_h, $opt_o, $opt_s, $opt_v, $opt_d, $opt_n, $opt_e, $opt_t, $opt_x, $opt_N, $opt_P, $opt_y, $opt_Y );
 
 sub HELP_MESSAGE {
     my $corpora = join ', ', sort values %Diogenes::Base::choices;
@@ -102,6 +102,25 @@ Further optional switches are supported:
 -t      Translate div labels to DigiLibLT labels
 -e      When using XML::DOM::Lite, do not convert hex entities to utf8
           (libxml2 insists upon converting to utf8)
+
+Prose and verse texts need to be converted to XML differently.  For
+verse, lines are significant and are the lowest level of citation, so
+these are preserved in XML.  For prose, lines of text have no semantic
+value and are usually not part of the citation because they represent
+the arbitrary typography of the edition digitized. So these are not
+marked-up in the XML and any hyphenation due to line breaking is
+removed.  This is usually the correct thing to do, though there may be
+exceptions, such as Aristotle, where Bekker's line-breaks have become
+somewhat canonical.  Unfortunately, there is no markup to indicate
+whether a given work is verse or prose, so this script tries to
+guess. Where that heuristic is known to have failed, there is a list
+of explicitly identified works and authors in the function
+is_work_verse.  Please feed back any other exceptions you may find.
+If you need to force the output to be prose or verse, use these
+switches:
+
+-y      Treat all works as verse, preserving lines as significant
+-Y      Treat all works as prose, removing line breaks and hyphenation
 
 };
 }
@@ -2430,6 +2449,8 @@ sub write_xml_file {
 
 
 sub is_work_verse {
+    return 1 if $opt_y;
+    return 0 if $opt_Y;
     my ($auth_num, $work_num) = @_;
 
     # Two lists of hard-coded exceptions to the heuristic (prose is 0,

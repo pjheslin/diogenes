@@ -1,11 +1,12 @@
 # Changes in Version 4 of Diogenes
 
 ## 4.7
-- More helpful error messages when files in databases are missing or damaged.
+- No longer crashing when files in databases are missing or damaged, and more helpful error messages in these cases.
 - Logeion links work again.
 - Added option to open PDFs in system browser rather than inside Diogenes app.
 - Added link to settings page when running outside Electron app.
 - Fix setting of XML export folder so export works outside Electron app.
+- Add switch to force XML export to consider texts prose or verse.
 
 ## 4.6
 
