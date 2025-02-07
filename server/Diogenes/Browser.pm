@@ -162,7 +162,7 @@ sub seek_passage
     # if ($typeauth =~ m/^(tlg5034|phi1348|phi0588|phi2349|tlg0031|phi0474|phi1002|tlg0096|phi0631|tlg5035)$/)
     if (not $self->{use_idt_browsing})
     {
-        print STDERR "Skipping ToC for this wierd author.\n" if $self->{debug};
+        print STDERR "Skipping ToC from idt file.\n" if $self->{debug};
     }
     else
     {
