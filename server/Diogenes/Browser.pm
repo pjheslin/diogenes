@@ -634,12 +634,26 @@ sub browse_forward
         $self->{interleave_printing} = $self->interleave_citations(\$result);
         $self->print_output (\$result);
     }
+    elsif ($self->{browse_backwards_scan})
+    {
+        $self->{browse_backwards_scan} = 0;
+        my @beginning = (0) x $self->{target_levels};
+        my $ret = $self->seek_passage ($self->{browse_auth}, $self->{browse_work}, @beginning);
+        if ($ret eq 'fail') {
+            print "Passage not found!\n";
+            return(0,0);
+        }
+        else {
+            $self->browse_forward;
+        }
+    }
     else
     {
         print "Sorry.  That's beyond the scope of the requested work.\n" unless 
             $self->{quiet};
-        last PASS;
+	return $self->{browse_begin}, -1;
     }
+    $self->{browse_backwards_scan} = 0 if exists $self->{browse_backwards_scan};
     $begin = $end;
     # Store and pass back the start and end points of the whole session
     $self->{browse_end} = $end + $offset;
@@ -828,7 +842,6 @@ sub browse_half_backward
     my @a = ($location[0], -1, $args[2], $args[3]);
     print STDERR join '--', @a if $self->{debug};
     $self->{browse_lines} = $lines;
-    $self->{browse_backwards_scan} = 0;
     $self->{browse_end} = -1;
     return $self->browse_forward(@a);
 }
