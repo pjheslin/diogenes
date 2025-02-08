@@ -85,12 +85,26 @@ function setAll() {
     }
 }
 
+function PerseusURI (action, lang, query, popup, enc) {
+  var uri = `Perseus.cgi?do=${action}&lang=${lang}&q=${query}`
+  if (popup) {
+    uri = uri + `&popup=${popup}`
+  }
+  if (enc) {
+    uri = uri + `&inp_enc=${enc}`
+  }
+  if (externalDict) {
+    uri = uri + `&dict=${externalDict}`
+  }
+  return uri
+}
 
 // AJAX stuff
 var req = null;
 
 function new_page (action, lang, query){
-    window.location.href = `Perseus.cgi?do=${action}&lang=${lang}&q=${query}&popup=1`;
+  // Popup page
+  window.location.href = PerseusURI(action, lang, query, 1) 
 }
 
 function sendRequest(action, lang, query, enc) {
