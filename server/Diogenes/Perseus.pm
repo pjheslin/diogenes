@@ -93,7 +93,7 @@ my ($dict_file, $dict_name, $dict_format, $idt_fh, $search_fh);
 my ($size, $idt_file, $txt_file, $dict_offset);
 my ($comp_fn, $key_fn, $format_sub);
 my ($lem_num, $logeion_link);
-my ($dweb);
+my ($dweb, $external_dict);
 
 my $setup = sub {
 
@@ -119,8 +119,9 @@ my $setup = sub {
     $qquery = ($lang eq "grk" and $inp_enc ne 'utf8') ? $beta_to_utf8->($query) : $query;
     # Convert to utf8 unless already converted
     $qquery = Encode::decode(utf8=>$qquery) unless $qquery =~ /[^\x00-\xFF]/;
+    $external_dict = $f->param('dict');
 
-    print STDERR "Perseus: >$request, $lang, $query, $qquery, $inp_enc<\n" if $debug;
+    print STDERR "Perseus: >$request, $lang, $query, $qquery, $inp_enc, $external_dict<\n" if $debug;
 
     # DiogenesWeb version number
     $dweb = $f->param('dweb');
