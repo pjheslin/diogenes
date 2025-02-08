@@ -108,15 +108,6 @@ function new_page (action, lang, query){
 }
 
 function sendRequest(action, lang, query, enc) {
-    // Spinning cursor
-    var body = document.getElementsByTagName("BODY")[0];
-    body.classList.add("waiting");
-
-    // Save the Perseus query in main page to reinstate it after JumpTo
-    var dio_form = document.getElementById("form");
-    dio_form.JumpFromQuery.value = query;
-    dio_form.JumpFromAction.value = action;
-    dio_form.JumpFromLang.value = lang;
 
     /* If we just want a popup, skip the AJAX fancy stuff*/
     var sidebar = document.getElementById("sidebar");
@@ -129,9 +120,25 @@ function sendRequest(action, lang, query, enc) {
             alert('You have requested that Perseus data be displayed in a pop-up window, ' +
                   'but you appear to have disallowed pop-ups from this web site. ' + e );
         }
+  // Spinning cursor
+  var body = document.getElementsByTagName("BODY")[0]
+  body.classList.add("waiting")
+  
+  // Save the Perseus query in main page to reinstate it after JumpTo
+  var dio_form = document.getElementById("form")
+  dio_form.JumpFromQuery.value = query
+  dio_form.JumpFromAction.value = action
+  dio_form.JumpFromLang.value = lang
+  
     }
-    else if (sidebarClass == "sidebar-newpage") {
-        new_page(action, lang, query);
+  }
+  else if (sidebarClass == "sidebar-newpage") {
+    new_page(action, lang, query)
+  }
+  else {
+    /* Check for running connections */
+    if (req != null && req.readyState != 0 && req.readyState != 4) {
+      req.abort()
     }
     else {
         /* Check for running connections */
