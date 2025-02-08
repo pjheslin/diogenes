@@ -304,8 +304,11 @@ my %defaults = (
 
     # Only applicable for Electron app
     external_pdf_viewer => 'false',
-
-    xml_export_dir => ''
+    xml_export_dir => '',
+    # URL of external Latin/Greek dict server to which word is appended
+    # e.g. for SilverDict:
+    # external_dict = 'http://localhost:2628/?group=Diogenes&key='
+    external_dict => 'http://localhost:2628/?group=Diogenes&key='
     );
 
 sub validate
