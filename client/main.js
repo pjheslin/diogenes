@@ -168,9 +168,11 @@ function createFirstWindow () {
   process.env.Diogenes_Config_Dir = settingsPath
 
   // Set the Content Security Policy headers
+  // const csp = "default-src 'self' *.uchicago.edu *.logeion.org 'unsafe-inline' localhost:*"
+  const csp = "default-src 'self' localhost:* *.uchicago.edu *.logeion.org 'unsafe-inline'"
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     callback({ responseHeaders: Object.assign({
-      "Content-Security-Policy": [ "default-src 'self' *.uchicago.edu *.logeion.org 'unsafe-inline'" ]
+      "Content-Security-Policy": [ csp ]
     }, details.responseHeaders)})
   })
 
