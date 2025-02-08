@@ -49,7 +49,7 @@ BEGIN {
 
 my ($f, $init, $filter_file, $default_encoding, $default_choice,
     $default_criteria, $filter_flag, $charset, $external_pdf_viewer,
-    $xml_export_dir);
+    $xml_export_dir, $external_dict);
 
 # These are lexical constants whose values are fixed.
 
@@ -268,6 +268,10 @@ my $print_title = sub
 
     print $f->hidden( -name => 'externalPdfViewer',
                       -default => $external_pdf_viewer,
+                      -override => 1 );
+    # This URL should be safely x-www-form-urlencoded by the form
+    print $f->hidden( -name => 'externalDict',
+                      -default => $external_dict,
                       -override => 1 );
 
     # for Perseus data
@@ -2271,6 +2275,7 @@ my $setup = sub {
     $default_encoding = $init->{cgi_default_encoding} || 'UTF-8';
     $default_criteria = $init->{default_criteria};
     $external_pdf_viewer = $init->{external_pdf_viewer};
+    $external_dict = $init->{external_dict};
     $xml_export_dir = $init->{xml_export_dir};
     
     $ENV{PATH} = "/bin/:/usr/bin/";
