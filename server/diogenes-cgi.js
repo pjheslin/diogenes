@@ -108,18 +108,6 @@ function new_page (action, lang, query){
 }
 
 function sendRequest(action, lang, query, enc) {
-
-    /* If we just want a popup, skip the AJAX fancy stuff*/
-    var sidebar = document.getElementById("sidebar");
-    var sidebarClass = sidebar.getAttribute("class");
-    if (sidebarClass == "sidebar-popup") {
-        try {
-            var perseusWin = window.open("Perseus.cgi?do="+action+"&lang="+lang+"&q="+query+"&popup=1",
-                'Perseus Data');
-        } catch(e) {
-            alert('You have requested that Perseus data be displayed in a pop-up window, ' +
-                  'but you appear to have disallowed pop-ups from this web site. ' + e );
-        }
   // Spinning cursor
   var body = document.getElementsByTagName("BODY")[0]
   body.classList.add("waiting")
@@ -130,6 +118,15 @@ function sendRequest(action, lang, query, enc) {
   dio_form.JumpFromAction.value = action
   dio_form.JumpFromLang.value = lang
   
+  /* If we just want a popup, skip the AJAX fancy stuff*/
+  var sidebar = document.getElementById("sidebar")
+  var sidebarClass = sidebar.getAttribute("class")
+  if (sidebarClass == "sidebar-popup") {
+    try {
+      var perseusWin = window.open(PerseusURI(action, lang, query, 1),
+                                   'Perseus Data')
+    } catch(e) { alert('You have requested that Perseus data be displayed in a pop-up window, but you appear to have disallowed pop-ups from this web site. '
+                       + e )
     }
   }
   else if (sidebarClass == "sidebar-newpage") {
