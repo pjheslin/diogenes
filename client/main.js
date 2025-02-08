@@ -211,12 +211,21 @@ app.on('browser-window-created', (event, win) => {
   // window, which I am intentionally setting here, to fix the issue. The
   // Electron documentation states that it should be set for "failing to
   // do so may result in unexpected behavior" but I haven't seen any yet.
-  win.webContents.setWindowOpenHandler(({ url }) => {
-    let newWin = createWindow(win, 20, 20)
-    newWin.once('ready-to-show', () => newWin.show())
-    newWin.loadURL(url)
-    return { action: 'deny' };
+  // win.webContents.setWindowOpenHandler(({ url }) => {
+  //   let newWin = createWindow(win, 20, 20)
+  //   newWin.once('ready-to-show', () => newWin.show())
+  //   newWin.loadURL(url)
+  //   return { action: 'deny' };
+  // })
+
+  win.webContents.setWindowOpenHandler(({ url, frameName, features }) => {
+    console.log(url)
+    console.log(frameName)
+    console.log(features)
+    return { action: 'allow' };
   })
+
+
   
   // Load context menu
   win.webContents.on('context-menu', (e, params) => {
