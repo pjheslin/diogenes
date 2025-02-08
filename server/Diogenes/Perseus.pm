@@ -670,11 +670,13 @@ my $old_pdf_link = sub {
     return qq{ <a onClick="openPDF('$href')" href="#"><i>OLD</i></a>};
 };
 
-my $silverdict_link = sub {
+my $external_dict_link = sub {
+    return '' unless $external_dict;
     my $word = shift;
-    my $href = "http://localhost:2628/?group=Diogenes&key=$word";
+    my $href = $external_dict . $word;
+    # my $href = 'https://logeion.uchicago.edu/' . $word;
     # We'll use a popup window to view the definition
-    return qq{ <a onClick="window.open('$href', 'SilverDict', 'width=500,height=600,left='+ (window.screen.width - 500) +',top='+ (window.screen.height - 600)); return false;" href="#"><i>SilverDict</i></a>};
+    return qq{ <a onClick="window.open('$href', 'External Dictionary', 'width=500,height=600,left='+ (window.screen.width - 500) +',top='+ (window.screen.height - 600)); return false;" href="#">Dict</a>};
 };
 
 our $munge_element = sub {
@@ -696,7 +698,7 @@ our $munge_element = sub {
         $out .= '<span style="display:block;text-align:right;">&nbsp;';
         $out .= $tll_pdf_link->($key);
         $out .= $old_pdf_link->($key);
-        $out .= $silverdict_link->($key);
+        $out .= $external_dict_link->($key);
         $out .= '</span></h2>';
         # $out .= '<h2>' . $key . '</h2>';
     }
