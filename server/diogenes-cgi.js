@@ -54,10 +54,10 @@ function isElectron () {
 
 async function openPDF (path) {
   var dio_form = document.getElementById("form");
-  var external = dio_form.externalPdfViewer.value
+  var externalPdfViewer = dio_form.externalPdfViewer.value
   if (path) {
     if (isElectron()) {
-      var retVal = await window.electron.showPDF(path, external)
+      var retVal = await window.electron.showPDF(path, externalPdfViewer)
       // Always seems to return false
       // if (!retVal) {
       //   window.open(path)
