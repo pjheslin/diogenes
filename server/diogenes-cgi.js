@@ -1,4 +1,5 @@
 var picture_dir = 'images/';
+var externalDict = '';
 
 function stopSpinningCursor() {
     // Turn off spinning cursor
@@ -16,7 +17,8 @@ window.addEventListener("load", function() {
   }
 
   var dio_form = document.getElementById("form");
-
+  externalDict = dio_form.externalDict.value
+  
   // If we have jumped to a passage from a lexicon, show that entry again after loading.
   if (dio_form.JumpFromShowLexicon &&
       dio_form.JumpFromShowLexicon.value == 'yes') {
