@@ -137,30 +137,23 @@ function sendRequest(action, lang, query, enc) {
     if (req != null && req.readyState != 0 && req.readyState != 4) {
       req.abort()
     }
-    else {
-        /* Check for running connections */
-        if (req != null && req.readyState != 0 && req.readyState != 4) {
-            req.abort();
-        }
-        if (window.XMLHttpRequest) {
-            req = new XMLHttpRequest();     // Firefox, Safari, ...
-        } else if (window.ActiveXObject) {
-            req = new ActiveXObject("Microsoft.XMLHTTP");  // Internet Explorer
-        }
-        req.onreadystatechange = stateHandler;
-        // For safety, we should really use encodeURIComponent() to
-        // encode these params and then decode them in Perseus.cgi.
-        var uri = "Perseus.cgi?" + "do=" + action + "&lang=" + lang + "&q="+ query
-        if (enc) {
-            // Send utf8 from user input (as opposed to text links, which use transliteration)
-            uri = uri + "&inp_enc=" + enc
-        }
-        req.open("GET", uri);
-        req.send();
-
-        return true;
+    if (window.XMLHttpRequest) {
+      req = new XMLHttpRequest()     // Firefox, Safari, ...
+    } else if (window.ActiveXObject) {
+      req = new ActiveXObject("Microsoft.XMLHTTP")  // Internet Explorer
     }
+    req.onreadystatechange = stateHandler
+    // For safety, we should really use encodeURIComponent() to
+    // encode these params and then decode them in Perseus.cgi.
+    // Enc is to send utf8 from user input, as opposed to text links,
+    // which use transliteration.
+    var uri = PerseusURI(action, lang, query, false, enc)
+    req.open("GET", uri);
+    req.send();
+    
     return true;
+  }
+  return true;
 }
 
 function stateHandler() {
