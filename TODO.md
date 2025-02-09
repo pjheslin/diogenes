@@ -6,11 +6,10 @@ Could not do this previously, because gatekeeper complains.
 ## Fix failure to download TLL PDFs
 ## Test -H option on server
 ## Remove the cruft of the 2 Perseus XML files from the app.
-
+## Remove gcide 
+Make links to all English words point to a configurable URL, which could provide better definitions or translations in the user’s own language. Default to wiktionary
+## 
 # Future to-do items
-## Add simple API to link to external dictionaries (e.g Lectus)
-Perhaps also remove gcide and make links to all English words link to the API instead, which could provide translations in the user’s own language.
-Also provide ability to use e.g. second edition of the OLD. 
 ## Change prebuilt-data repo to use git-lfs (and my ssh key)
 ## Add dark mode option.
 ## Add citation info from authtab.xml to exported XML files.

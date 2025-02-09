@@ -7,6 +7,7 @@
 - Added link to settings page when running outside Electron app.
 - Fix setting of XML export folder so export works outside Electron app.
 - Add switch to force XML export to consider texts prose or verse.
+- Configurable option to add links to other Greek/Latin dictionaries.
 
 ## 4.6
 
