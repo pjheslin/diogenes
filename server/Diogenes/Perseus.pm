@@ -246,18 +246,7 @@ my $setup = sub {
         $logeion_link = ''
     }
     else {
-        # $logeion_link = qq{<a onClick="window.open('https://logeion.uchicago.edu/$qquery', 'Logeion'); return false;" href="#">Logeion</a>};
-
-    $logeion_link = qq{ <a onClick="window.open('https://logeion.uchicago.edu/$qquery', 'Logeion', 'width=500,height=600,left='+ (window.screen.width - 500) +',top='+ (window.screen.height - 600)); return false;" href="#">Logeion</a>};
-
-    # $logeion_link = qq{ <a onClick="window.open('http://localhost:2628/?group=Diogenes&key=$qquery', 'Logeion', 'width=500,height=600,left='+ (window.screen.width - 500) +',top='+ (window.screen.height - 600)); return false;" href="#">Logeion</a>};
-
-
-   # external_dict => 'http://localhost:2628/?group=Diogenes&key='
-     
-        # $logeion_link = qq{<a href="" class="logeion-link" target="logeion">Logeion</a>};
-
-        # $logeion_link = qq{<a href="https://logeion.uchicago.edu/$qquery" class="logeion-link" target="logeion">Logeion</a>};
+        $logeion_link = qq{ <a class="logeion-link" onClick="window.open('https://logeion.uchicago.edu/$qquery', 'Logeion', 'width='+(window.screen.width - 200)+',height='+(window.screen.height - 200)+',left=100,top=100'); return false;" href="#">Logeion</a>};
     }
 };
 
@@ -674,9 +663,8 @@ my $external_dict_link = sub {
     return '' unless $external_dict;
     my $word = shift;
     my $href = $external_dict . $word;
-    # my $href = 'https://logeion.uchicago.edu/' . $word;
     # We'll use a popup window to view the definition
-    return qq{ <a onClick="window.open('$href', 'External Dictionary', 'width=500,height=600,left='+ (window.screen.width - 500) +',top='+ (window.screen.height - 600)); return false;" href="#">Dict</a>};
+    return qq{ <a onClick="window.open('$href', 'External Dictionary', 'width=500,height=600,left='+ (window.screen.width - 500) +',top='+ (window.screen.height - 600)); return false;" href="#" class="dict-link">Dict</a>};
 };
 
 our $munge_element = sub {
