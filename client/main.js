@@ -205,28 +205,24 @@ app.on('browser-window-created', (event, win) => {
     windows.splice(windows.indexOf(win), 1)
   })
 
-  // Intercept and handle new-window requests (e.g. from shift-click), to
-  // prevent child windows being created which would die if the parent was
-  // killed. This was something to do with the new window being a "guest"
-  // window, which I am intentionally setting here, to fix the issue. The
-  // Electron documentation states that it should be set for "failing to
-  // do so may result in unexpected behavior" but I haven't seen any yet.
-  // win.webContents.setWindowOpenHandler(({ url }) => {
-  //   let newWin = createWindow(win, 20, 20)
-  //   newWin.once('ready-to-show', () => newWin.show())
-  //   newWin.loadURL(url)
-  //   return { action: 'deny' };
-  // })
-
+  // New windows which are not Diogenes windows, e.g. Logeion, external dict
   win.webContents.setWindowOpenHandler(({ url, frameName, features }) => {
-    console.log(url)
-    console.log(frameName)
-    console.log(features)
-    return { action: 'allow' };
+    let newWin = new BrowserWindow()
+    newWin.once('ready-to-show', () => newWin.show())
+    newWin.loadURL(url)
+    newWin.setTitle(frameName)
+    if (features) {
+      var feat = {}
+      features.split(',').forEach( pair => {
+        var kv = pair.split('=')
+        feat[kv[0]] = Number(kv[1])
+      })
+      newBounds = {x: feat.left, y: feat.top, width: feat.width, height: feat.height}
+      newWin.setBounds(newBounds)
+    }
+    return { action: 'deny' };
   })
 
-
-  
   // Load context menu
   win.webContents.on('context-menu', (e, params) => {
     // Only load on links, which aren't javascript links
