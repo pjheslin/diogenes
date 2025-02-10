@@ -10,7 +10,6 @@ all:
 	rm prebuilt-data.tar
 
 clean-data:
-	rm -f $(DATA)/gcide.txt
 	rm -f $(DATA)/grc.lsj.perseus-eng0.xml
 	rm -f $(DATA)/greek-analyses.txt
 	rm -f $(DATA)/lat.ls.perseus-eng1.xml

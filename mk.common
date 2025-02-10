@@ -3,7 +3,6 @@
 DEPDIR = dependencies
 DATA = $(DEPDIR)/data
 BUILD = build
-GCIDE = $(BUILD)/gcide
 PERSEUSLEXICA = $(BUILD)/LexicaPerseus
 LOGEIONLEXICA = $(BUILD)/LexicaLogeion
 LEXICONFILES = \

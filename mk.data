@@ -4,35 +4,22 @@
 
 include mk.common
 
-GCIDEVERSION = 0.48.1
-GCIDESUM = e227f8f9e720eb0b1b805ecec4eb4e5c1045784ab3871cdebd19c237d1242311
-
 DATAFILES = \
 	$(DATA)/latin-analyses.txt \
 	$(DATA)/greek-analyses.txt \
 	$(DATA)/latin-analyses.idt \
 	$(DATA)/greek-analyses.idt \
 	$(DATA)/latin-lemmata.txt \
-	$(DATA)/greek-lemmata.txt \
-	$(DATA)/gcide.txt
+	$(DATA)/greek-lemmata.txt
 
 .SUFFIXES: .txt .idt
 
-all: server/Diogenes/unicode-equivs.pl $(GCIDE)/gcide.dict.dz $(DATAFILES)
+all: server/Diogenes/unicode-equivs.pl $(DATAFILES)
 
 data: $(DATAFILES)
 
 server/Diogenes/unicode-equivs.pl:
 	make -f makefile server/Diogenes/unicode-equivs.pl
-
-$(GCIDE)/gcide.dict.dz:
-	rm -rf $(GCIDE)
-	mkdir -p $(GCIDE)
-	wget -O $(GCIDE)/dict-gcide_$(GCIDEVERSION)_all.deb http://http.debian.net/debian/pool/main/d/dict-gcide/dict-gcide_$(GCIDEVERSION)_all.deb
-	printf '%s  %s\n' $(GCIDESUM) $(GCIDE)/dict-gcide_$(GCIDEVERSION)_all.deb | shasum -c -a 256
-	cd $(GCIDE) && ar x dict-gcide_$(GCIDEVERSION)_all.deb data.tar.gz
-	cd $(GCIDE) && zcat < data.tar.gz | tar x ./usr/share/dictd/gcide.dict.dz
-	mv $(GCIDE)/usr/share/dictd/gcide.dict.dz $@
 
 $(BUILD)/lewis-index.txt: utils/index_lewis.pl $(DATA)/lat.ls.perseus-eng1.xml
 	mkdir -p $(BUILD)
@@ -77,14 +64,10 @@ $(DATA)/latin-lemmata.txt: utils/make_latin_lemmata.pl $(BUILD)/lewis-index.txt 
 $(DATA)/greek-lemmata.txt: utils/make_greek_lemmata.pl $(BUILD)/lsj-index.txt $(BUILD)/grc.words $(DATA)/greek-analyses.txt
 	./utils/make_greek_lemmata.pl $(BUILD)/lsj-index.txt $(BUILD)/grc.words < $(DATA)/greek-analyses.txt > $@
 
-# The sed below cuts out a notice at the start of the dictionary file
-$(DATA)/gcide.txt: utils/munge_gcide.pl $(GCIDE)/gcide.dict.dz
-	zcat < $(GCIDE)/gcide.dict.dz | sed '1,102d' | ./utils/munge_gcide.pl > $@
-
 clean-all:
 	rm -f $(BUILD)/lewis-index.txt $(BUILD)/lewis-index-head.txt $(BUILD)/lewis-index-trans.txt
 	rm -f $(BUILD)/lsj-index.txt $(BUILD)/lsj-index-head.txt $(BUILD)/lsj-index-trans.txt
-	rm -rf $(DEPDIR)/gcide $(GCIDE) $(MORPHEUS)
+	rm -rf $(MORPHEUS)
 	rm -f $(DATAFILES)
 
 clean-data:
