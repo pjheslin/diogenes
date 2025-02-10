@@ -39,7 +39,6 @@ my $picture_dir = 'images/';
 my %dicts = (
     grk => ['grc.lsj.xml', 'LSJ', 'xml'],
     lat => ['lat.ls.perseus-eng1.xml', 'Lewis-Short', 'xml'],
-    eng => ['gcide.txt', 'Gcide (based on 1913 Webster)', 'dict']
     );
 my %format_fn;
 
@@ -55,8 +54,6 @@ for (@alphabet) {
     $alph{$_} = $i;
     $i++;
 }
-# For English
-my @suffixes = qw{s es d ed n en ing};
 
 # Needed by setup().
 my $beta_to_utf8 = sub {
@@ -738,9 +735,6 @@ my $do_lookup = sub {
     elsif ($lang eq 'lat' ) {
         $lewis_search_setup->();
     }
-    elsif ($lang eq 'eng' ) {
-        $gcide_search_setup->();
-    }
     else {
         warn "Bad Perseus request (e)";
     }
@@ -1020,25 +1014,6 @@ my $do_parse = sub {
     }
 };
 
-my $try_english = sub {
-    my $lemma = shift;
-    my $entry = $do_lookup->($lemma, 1);
-};
-
-my $parse_english = sub {
-    return if  $try_english->($query);
-    eval "require PorterStemmer;";
-    my $lemma = PorterStemmer::stem($query);
-    return if $try_english->($lemma);
-    for my $s (@suffixes) {
-        $lemma = $query;
-        if ($lemma =~ s/$s$//) {
-            return if $try_english->($lemma);
-        }
-    }
-    print "<p>Could not find $query in the $dict_name English dictionary.</p>";
-
-};
 
 my $dispatch = sub {
     if ($logeion_link) {
@@ -1046,7 +1021,7 @@ my $dispatch = sub {
     }
     if ($request eq 'parse') {
         if ($lang eq 'eng') {
-            $parse_english->();
+            print STDERR "ERROR: No English dictionary";
         }
         else {
             $do_parse->();
