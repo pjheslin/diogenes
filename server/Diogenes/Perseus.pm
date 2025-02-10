@@ -20,7 +20,7 @@ use Diogenes::EntityTable;
 use FileHandle;
 use Encode;
 use Unicode::Normalize;
-use URI::Escape;
+use URI::Escape qw( uri_unescape );
 
 # The lexica are now utf8, but we need to read the files in as bytes,
 # as we want to jump into the middle and read backwards.  We then
@@ -116,9 +116,9 @@ my $setup = sub {
     $qquery = ($lang eq "grk" and $inp_enc ne 'utf8') ? $beta_to_utf8->($query) : $query;
     # Convert to utf8 unless already converted
     $qquery = Encode::decode(utf8=>$qquery) unless $qquery =~ /[^\x00-\xFF]/;
-    $external_dict = $f->param('dict');
+    $external_dict = uri_unescape($f->param('dict'));
 
-    print STDERR "Perseus: >$request, $lang, $query, $qquery, $inp_enc, $external_dict<\n" if $debug;
+    print STDERR "Perseus: ||$request, $lang, $query, $qquery, $inp_enc, $external_dict||\n" if $debug;
 
     # DiogenesWeb version number
     $dweb = $f->param('dweb');
