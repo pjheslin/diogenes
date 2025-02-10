@@ -18,6 +18,7 @@ window.addEventListener("load", function() {
 
   var dio_form = document.getElementById("form");
   externalDict = dio_form.externalDict.value
+  englishDict = dio_form.englishDict.value
   
   // If we have jumped to a passage from a lexicon, show that entry again after loading.
   if (dio_form.JumpFromShowLexicon &&
@@ -277,8 +278,10 @@ function parse_lat (word, element) {
     sendRequest("parse", "lat", word);
 }
 function parse_eng (word, element) {
-    if (typeof element !== 'undefined') { highlight(element) }
-    sendRequest("parse", "eng", word);
+  if (typeof element !== 'undefined') { highlight(element) }
+  var href = englishDict + word
+  var features = 'width=500,height=600,left=' + (window.screen.width - 500) + ',top=' + (window.screen.height - 600)
+  window.open(href, 'English Dictionary', features)
 }
 
 // These put the results in a new page
