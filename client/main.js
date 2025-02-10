@@ -205,6 +205,7 @@ app.on('browser-window-created', (event, win) => {
 
   // New windows which are not Diogenes windows, e.g. Logeion, external dict
   win.webContents.setWindowOpenHandler(({ url, frameName, features }) => {
+    // console.log(url, frameName, features)
     let newWin = new BrowserWindow()
     newWin.once('ready-to-show', () => newWin.show())
     newWin.loadURL(url)
@@ -276,16 +277,6 @@ app.on('second-instance', () => {
     windows[0].restore()
   }
   windows[0].focus()
-})
-
-// Only allow loading content from localhost
-app.on('web-contents-created', (event, contents) => {
-  contents.on('will-navigate', (event, navigationUrl) => {
-    const url = new URL(navigationUrl)
-    if (url.hostname !== 'localhost') {
-      event.preventDefault()
-    }
-  })
 })
 
 // Start diogenes-server.pl
