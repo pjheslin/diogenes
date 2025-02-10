@@ -49,7 +49,7 @@ BEGIN {
 
 my ($f, $init, $filter_file, $default_encoding, $default_choice,
     $default_criteria, $filter_flag, $charset, $external_pdf_viewer,
-    $xml_export_dir, $external_dict);
+    $xml_export_dir, $external_dict, $english_dict);
 
 # These are lexical constants whose values are fixed.
 
@@ -269,9 +269,14 @@ my $print_title = sub
     print $f->hidden( -name => 'externalPdfViewer',
                       -default => $external_pdf_viewer,
                       -override => 1 );
-    # This URL should be safely x-www-form-urlencoded by the form
+    # These URLs should be safely x-www-form-urlencoded by the form,
+    # but later, when external is passed in the query string as a
+    # parameter to Perseus.pm, it needs to be double encoded.
     print $f->hidden( -name => 'externalDict',
                       -default => $external_dict,
+                      -override => 1 );
+    print $f->hidden( -name => 'englishDict',
+                      -default => $english_dict,
                       -override => 1 );
 
     # for Perseus data
@@ -2276,6 +2281,7 @@ my $setup = sub {
     $default_criteria = $init->{default_criteria};
     $external_pdf_viewer = $init->{external_pdf_viewer};
     $external_dict = $init->{external_dict};
+    $english_dict = $init->{english_dict};
     $xml_export_dir = $init->{xml_export_dir};
     
     $ENV{PATH} = "/bin/:/usr/bin/";
