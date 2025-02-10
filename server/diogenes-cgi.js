@@ -94,7 +94,8 @@ function PerseusURI (action, lang, query, popup, enc) {
     uri = uri + `&inp_enc=${enc}`
   }
   if (externalDict) {
-    uri = uri + `&dict=${externalDict}`
+    encodedDict = encodeURIComponent(externalDict)
+    uri = uri + `&dict=${encodedDict}`
   }
   return uri
 }
