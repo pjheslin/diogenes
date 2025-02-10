@@ -167,9 +167,7 @@ function createFirstWindow () {
   lockFile = path.join(settingsPath, 'diogenes-lock.json')
   process.env.Diogenes_Config_Dir = settingsPath
 
-  // Set the Content Security Policy headers
-  // const csp = "default-src 'self' *.uchicago.edu *.logeion.org 'unsafe-inline' localhost:*"
-  const csp = "default-src 'self' localhost:* *.uchicago.edu *.logeion.org 'unsafe-inline'"
+  const csp = "default-src 'self' data: localhost:* *.uchicago.edu *.logeion.org 'unsafe-inline'; img-src 'self' data: localhost:* *.uchicago.edu *.logeion.org *.wikimedia.org; media-src 'self' data: localhost:* *.uchicago.edu *.logeion.org *.wikimedia.org; "
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     callback({ responseHeaders: Object.assign({
       "Content-Security-Policy": [ csp ]
