@@ -29,7 +29,7 @@ my $config_file = $d->{user_config};
 
 my @fields = qw(context cgi_default_encoding perseus_show browse_lines
                 input_encoding tlg_dir phi_dir ddp_dir external_pdf_viewer
-                tll_pdf_dir old_pdf_dir xml_export_dir) ;
+                tll_pdf_dir old_pdf_dir xml_export_dir external_dict english_dict) ;
 
 my %perseus_labels = (popup => "Pop up a new window",
                       split => "Split window",
@@ -155,6 +155,22 @@ my $display_splash = sub
                                 -size=>40,
                                 -maxlength=>100,
                                 -Default=>$d->{xml_export_dir}))
+         ),
+         $q->Tr
+         (
+          $q->th({align=>'right'}, 'URL for additional Latin/Greek dictionary:'),
+          $q->td($q->textfield( -name=>'external_dict',
+                                -size=>40,
+                                -maxlength=>100,
+                                -Default=>$d->{external_dict}))
+         ),
+         $q->Tr
+         (
+          $q->th({align=>'right'}, 'URL for English dictionary:'),
+          $q->td($q->textfield( -name=>'english_dict',
+                                -size=>40,
+                                -maxlength=>100,
+                                -Default=>$d->{english_dict}))
          )
 
         ),
