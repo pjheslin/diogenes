@@ -4,8 +4,6 @@ Get developer account; notarize app
 ## Distribute Apple silicon version on website.
 Could not do this previously, because gatekeeper complains.
 ## Fix failure to download TLL PDFs
-## Test -H option on server
-## Remove the cruft of the 2 Perseus XML files from the app.
 ## 
 # Future to-do items
 ## Change prebuilt-data repo to use git-lfs (and my ssh key)

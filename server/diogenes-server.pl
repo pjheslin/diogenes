@@ -67,12 +67,14 @@ unless (getopts('dDp:hH:lm:bP:'))
 
 USAGE: diogenes-server.pl [-dhlb] [-p port] [-H host] [-m netmask]
 
-    -h  Use current network hostname, so that Diogenes can be accessed by
-        other computers on the network (localhost is the default).
+    -h  Use current network hostname instead of localhost (the default).
 
-    -H  Specify a hostname to bind to.
+    -H  Specify the hostname or IP address to bind to, so that Diogenes
+        can be accessed by other computers on the network.  Do not
+        expose this server to the public Internet, as it has not been
+        designed with that level of security. 
 
-    -p Specify a port to bind to (8888 is the default; the usual range
+    -p  Specify a port to bind to (8888 is the default; the usual range
         is between 1024 and 65535).  If the specified port is
         unavailable, it will try again by increasing the number.
 
