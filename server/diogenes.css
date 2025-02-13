@@ -433,3 +433,7 @@ input.prev {
   text-decoration: none;
   color: #28709a;
 }
+
+.dict {
+    padding: 5px;
+}

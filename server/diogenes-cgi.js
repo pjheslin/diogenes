@@ -1,5 +1,6 @@
 var picture_dir = 'images/';
 var externalDict = '';
+var englishDict = '';
 
 function stopSpinningCursor() {
     // Turn off spinning cursor
@@ -17,8 +18,12 @@ window.addEventListener("load", function() {
   }
 
   var dio_form = document.getElementById("form");
-  externalDict = dio_form.externalDict.value
-  englishDict = dio_form.englishDict.value
+  if (dio_form.externalDict) {
+    externalDict = dio_form.externalDict.value    
+  }
+  if (dio_form.englishDict) {
+    englishDict = dio_form.englishDict.value
+  }
   
   // If we have jumped to a passage from a lexicon, show that entry again after loading.
   if (dio_form.JumpFromShowLexicon &&
@@ -279,9 +284,19 @@ function parse_lat (word, element) {
 }
 function parse_eng (word, element) {
   if (typeof element !== 'undefined') { highlight(element) }
-  var href = englishDict + word
-  var features = 'width=500,height=600,left=' + (window.screen.width - 500) + ',top=' + (window.screen.height - 600)
-  window.open(href, 'English Dictionary', features)
+  var features = 'width=600,height=600,left=' + (window.screen.width - 600) + ',top=' + (window.screen.height - 600)
+  if (englishDict == 'gcide') {
+    try {
+      var perseusWin = window.open(PerseusURI('parse', 'eng', word, true),
+                                   'Gcide (Webster 1913)', features)
+    } catch(e) {
+      alert('Please enable pop-ups. '+ e )
+    }
+  }
+  else {
+    var href = englishDict + word
+    window.open(href, 'English Dictionary', features)
+  }
 }
 
 // These put the results in a new page

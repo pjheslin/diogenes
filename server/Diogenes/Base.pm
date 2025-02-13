@@ -306,14 +306,17 @@ my %defaults = (
     external_pdf_viewer => 'false',
     xml_export_dir => '',
 
-    # URL of Latin/Greek dict server; current word is appended
-    # e.g. for SilverDict:
+    # URL of Latin/Greek dict server; current word is appended. Must
+    # be on localhost for Electron app.  E.g. for SilverDict:
     # external_dict = 'http://localhost:2628/?group=Diogenes&key='
     external_dict => '',
 
-    # URL of English dictionary server; current word is appended
-    # Default is Wiktionary, but could be English to another language
-    english_dict => 'https://en.wiktionary.org/wiki/'
+    # URL of English dictionary server; current word is appended. Could
+    # be used for a dict (e.g. SilverDict) from English to another
+    # language.  Default value of 'gcide' uses internal dictionary.
+    # CSP will block external sites, except Wiktionary.
+    # english_dict => 'https://en.wiktionary.org/wiki/',
+    english_dict => 'gcide'
     );
 
 sub validate

@@ -39,6 +39,7 @@ my $picture_dir = 'images/';
 my %dicts = (
     grk => ['grc.lsj.xml', 'LSJ', 'xml'],
     lat => ['lat.ls.perseus-eng1.xml', 'Lewis-Short', 'xml'],
+    eng => ['gcide.txt', 'Gcide (based on 1913 Webster)', 'dict']
     );
 my %format_fn;
 
@@ -54,6 +55,9 @@ for (@alphabet) {
     $alph{$_} = $i;
     $i++;
 }
+
+# For English
+my @suffixes = qw{s es d ed n en ing};
 
 # Needed by setup().
 my $beta_to_utf8 = sub {
@@ -138,8 +142,10 @@ my $setup = sub {
             -'Access-Control-Allow-Origin' => '*');
     }
     if ($f->param('popup')) {
+        my $title = 'Perseus Data';
+        $title = 'Gcide (Webster 1913)' if $lang eq 'eng'; 
         if ($dweb) {
-            print $f->start_html(-title=>'Perseus Data',
+            print $f->start_html(-title=>$title,
                                  -meta=>{'content' => 'text/html;charset=utf-8'},
                                  -encoding=>"utf-8",
                                  -script=>[
@@ -153,7 +159,7 @@ my $setup = sub {
             print qq{<span hidden>$Diogenes::Base::Version</span>};
         }
         else {
-            print $f->start_html(-title=>'Perseus Data',
+            print $f->start_html(-title=>$title,
                                  -meta=>{'content' => 'text/html;charset=utf-8'},
                                  -encoding=>"utf-8",
                                  -script=>{-type=>'text/javascript',
@@ -709,6 +715,7 @@ $format_fn{xml} = sub {
 
 $format_fn{dict} = sub {
     my $text = shift;
+    print '<div class="dict">';
     $text =~ s#(\S+)(\s*)#$text_with_links->($1, $lang).($2||'')#ge;
     $text =~ s#\t#\n#g;
     $text =~ s#^(<[^>]+>)([A-Za-z]+)(</[^>]>)#$1<b>$2</b>$3#g;
@@ -716,8 +723,8 @@ $format_fn{dict} = sub {
     $text =~ s#\n(\s+)#'<br>'.('&nbsp;' x length $1)#ge;
 
     print $text;
-     print qq{<hr><a onClick="prevEntry$lang($dict_offset)">Previous Entry</a>&nbsp;&nbsp;&nbsp;<a onClick="nextEntry$lang($dict_offset)">Next Entry</a><hr>};
-
+    print qq{<hr><a onClick="prevEntry$lang($dict_offset)">Previous Entry</a>&nbsp;&nbsp;&nbsp;<a onClick="nextEntry$lang($dict_offset)">Next Entry</a><hr>};
+    print '</div>';
 };
 
 my $format_dict = sub {
@@ -734,6 +741,9 @@ my $do_lookup = sub {
     }
     elsif ($lang eq 'lat' ) {
         $lewis_search_setup->();
+    }
+    elsif ($lang eq 'eng' ) {
+        $gcide_search_setup->();
     }
     else {
         warn "Bad Perseus request (e)";
@@ -1015,6 +1025,25 @@ my $do_parse = sub {
     }
 };
 
+my $try_english = sub {
+    my $lemma = shift;
+    my $entry = $do_lookup->($lemma, 1);
+};
+
+my $parse_english = sub {
+    return if  $try_english->($query);
+    eval "require PorterStemmer;";
+    my $lemma = PorterStemmer::stem($query);
+    return if $try_english->($lemma);
+    for my $s (@suffixes) {
+        $lemma = $query;
+        if ($lemma =~ s/$s$//) {
+            return if $try_english->($lemma);
+        }
+    }
+    print "<p>Could not find $query in the $dict_name English dictionary.</p>";
+
+};
 
 my $dispatch = sub {
     if ($logeion_link) {
@@ -1022,7 +1051,7 @@ my $dispatch = sub {
     }
     if ($request eq 'parse') {
         if ($lang eq 'eng') {
-            print STDERR "ERROR: No English dictionary";
+            $parse_english->();
         }
         else {
             $do_parse->();
