@@ -3,12 +3,13 @@
 Get developer account; notarize app
 ## Distribute Apple silicon version on website.
 Could not do this previously, because gatekeeper complains.
-## Fix failure to download TLL PDFs
 ## 
 # Future to-do items
 ## Change prebuilt-data repo to use git-lfs (and my ssh key)
 ## Add dark mode option.
 ## Add citation info from authtab.xml to exported XML files.
+### Check that we export all embedded citation info
+(for fragments, etc.)
 ## Import font_fixes from xml-export into desktop display
 ## Fix unicode input for Latin to search for accented words
 

@@ -1,14 +1,16 @@
 # Changes in Version 4 of Diogenes
 
 ## 4.7
+
 - No longer crashing when files in databases are missing or damaged, and more helpful error messages in these cases.
 - Logeion links work again.
 - Added option to open PDFs in system browser rather than inside Diogenes app.
+- Configurable option to add links to other Greek/Latin dictionaries.
+- Option to use a different English dictionary.
+- New means for downloading TLL PDFs.
 - Added link to settings page when running outside Electron app.
 - Fix setting of XML export folder so export works outside Electron app.
 - Add switch to force XML export to consider texts prose or verse.
-- Configurable option to add links to other Greek/Latin dictionaries.
-- Option to use a different English dictionary, other than the default.
 
 ## 4.6
 
@@ -32,7 +34,8 @@
   that caused problems when non-Latin characters were used in the names
   of the paths to the folder holding the databases.
 * Removed problematic code that sometimes interfered with finding
-  citations in very short or fragmentary texts.
+  citations in very short or fragmentary texts. [In fact, this was
+  done incorrectly and was only properly fixed in version 4.7]
 
 ### Changes implemented earlier but not released then
 * TLG search results are now presented in (rough) chronological order
