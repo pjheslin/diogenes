@@ -104,16 +104,15 @@ foreach my $k (sort keys %bookmarks) {
 
 sub get_vol_and_col {
     my $filename = shift;
-    if ($filename =~ m/ThLL_IX_1__3_/) {
-        return ["9.1.3", "503", "530"];
-    }
-    # Volume number in the json index is either one part or two.  We don't care about the third part of the volume number, since the json index does not use it and in any case it is not used consistently in filenames to denote the fascicle.  
+    # Volume number in the json index is either one part or two.  We don't care about the third part of the volume number, since the json index does not use it and in any case it is not used consistently in filenames to denote the fascicle.
+
+    # Filenames have been tidied up and made consistent, including replacing en-dashes with hyphens.
+    
     die $! unless $filename =~ m/ThLL vol\. ((?:onom|\d+)(?:\.\d+)?)/;
     my $vol = $1;
     $vol =~ s/onom\./o/;
-    $vol =~ s/^0//; # Leading zero used inconsistently
     die $! unless
-        $filename =~ m/ThLL vol\. (?:onom|\d+)(?:[\.\d]+)* col\. (\d+)–(\d+)/; # en dash!
+        $filename =~ m/ThLL vol\. (?:onom|\d+)(?:[\.\d]+)* col\. (\d+)-(\d+)/;
     my $col_start = $1;
     my $col_end = $2;
     $col_start =~ s/^0+//;

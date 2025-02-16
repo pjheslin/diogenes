@@ -1,4 +1,5 @@
-const {app, BrowserWindow, Menu, MenuItem, ipcMain, session, dialog} = require('electron')
+const {app, BrowserWindow, Menu, MenuItem, ipcMain,
+       session, dialog, shell} = require('electron')
 const {spawn} = require('child_process')
 const path = require('path')
 const process = require('process')
@@ -34,7 +35,19 @@ const winStatePath = path.join(settingsPath, 'windowstate.json')
 const prefsFile = path.join(settingsPath, 'diogenes.prefs')
 const cssConfigFile = path.join(settingsPath, 'config.css')
 
+// server/ can be either at ../server or ../../server depending on whether
+// we're running a packaged or development version, so try both
+let serverPath = path.join(app.getAppPath(), '..', 'server')
+if (!fs.existsSync(serverPath)) {
+  serverPath = path.join(app.getAppPath(), '..', '..', 'server')
+}
+let dioServerPath = path.join(serverPath, 'diogenes-server.pl')
 
+// For Mac and Unix, we assume perl is in the path
+let perlName = 'perl'
+if (process.platform == 'win32') {
+  perlName = path.join(app.getAppPath(), '..', '..', 'strawberry', 'perl', 'bin', 'perl.exe')
+}
 
 const versionFile = path.resolve(__dirname, 'version.js')
 var currentVersion = "0.0"
@@ -159,6 +172,7 @@ function checkVersion (win) {
         win.webContents.executeJavaScript('localStorage.setItem("diogenesVersion", '+'"'+currentVersion+'")')
           .then( () => {console.log('New version number saved')} )
           .catch( (e) => {console.log('Failed to save new version number: '+e)} )
+        tllCheck()
       }})
 }
 
@@ -281,20 +295,7 @@ app.on('second-instance', () => {
 
 // Start diogenes-server.pl
 function startServer () {
-  // For Mac and Unix, we assume perl is in the path
-  let perlName = 'perl'
-  if (process.platform == 'win32') {
-    perlName = path.join(app.getAppPath(), '..', '..', 'strawberry', 'perl', 'bin', 'perl.exe')
-  }
-
-  // server/ can be either at ../server or ../../server depending on whether
-  // we're running a packaged or development version, so try both
-  let serverPath = path.join(app.getAppPath(), '..', 'server', 'diogenes-server.pl')
-  if (!fs.existsSync(serverPath)) {
-    serverPath = path.join(app.getAppPath(), '..', '..', 'server', 'diogenes-server.pl')
-  }
-
-  let server = spawn(perlName, [serverPath], {'windowsHide': true})
+  let server = spawn(perlName, [dioServerPath], {'windowsHide': true})
   server.stdout.on('data', (data) => {
     console.log('server stdout: ' + data)
   })
@@ -496,15 +497,27 @@ function initializeMenuTemplate () {
         },
         {
           label: 'Download TLL PDFs',
-          click: (menu, win) => {
-            if (tllConfirm()) {
-              let newWin = createWindow(win, 20, 20)
-              newWin.loadURL('http://localhost:' + dioSettings.port + '/tll-pdf-download.cgi')
-            }
+          click: () => {
+            var result = dialog.showMessageBoxSync({
+              type: 'info',
+              buttons: ['OK', 'Cancel'],
+              title: 'Download TLL PDFs',
+              message: 'Open in Browser?',
+              detail: 'Click on OK to leave Diogenes and open the TLL download page in your browser.' })
+            if (result == 0) {
+              shell.openExternal('http://localhost:' + dioSettings.port +
+                                 '/download-tll.html')}
           }
         },
         {
-          label: 'Other Settings',
+          label: 'Rename TLL PDFs',
+          click: (menu, win) => {
+            tllRename()
+          }
+          
+        },
+        {
+          label: 'Advanced Settings',
           accelerator: 'CmdOrCtrl+T',
           click: (menu, win) => {
             let newWin = createWindow(win, 20, 20)
@@ -619,7 +632,7 @@ function initializeMenuTemplate () {
       submenu: [
         {
           label: 'Learn More',
-          click () { require('electron').shell.openExternal('https://d.iogen.es/d') }
+          click: () => { shell.openExternal('https://d.iogen.es/d') }
         }
       ]
     }
@@ -876,7 +889,7 @@ function getTLLpath () {
     return false
   }
 
-  found = data.match(/^tll_pdf_dir\s+\"(.*)\"$/m)
+  found = data.match(/^tll_pdf_dir\s+\"?(.*?)\"?$/m)
   if (found && found[1]) {
     return found[1]
   } else {
@@ -884,32 +897,58 @@ function getTLLpath () {
   }
 }
 
-function tllConfirm () {
-  // So as to have only one way to set this, we ask the user to
-  // set it via DB settings page rather than having a dialog here
-  // This needs to agree with value in tll-pdf-download.pl
-  
-  tllPath = getTLLpath ()
-  if (!tllPath) {
+let renamePath = path.join(serverPath, 'tll-pdf-rename.pl')
+
+function tllCheck () {
+  // Test for old filenames: we check for a leading 0 and rename all
+  // if found.
+  console.log('Checking TLL filenames.')
+  TLLpath = getTLLpath()
+  if (TLLpath) {
+    var filenames = fs.readdirSync(TLLpath)
+    var oldFile = filenames.filter(str => str.startsWith('0'))
+    // console.log('old: ', oldFile, 'files:', filenames)
+    if (oldFile.length == 0) {
+      console.log('OK.')
+    }
+    else {
+      console.log("Old-style TLL PDF filename found; renaming files.")
+      let rename = spawn(perlName, [renamePath, TLLpath], {'windowsHide': true})
+      rename.stdout.on('data', (data) => {
+        console.error(`${data}`)
+      })
+      rename.stderr.on('data', (data) => {
+        console.error(`${data}`)
+      })
+    }
+  }
+}
+
+function tllRename () {
+  var TLLpath = getTLLpath()
+  if (TLLpath) {
+    var result = dialog.showMessageBoxSync({
+      type: 'info',
+      buttons: ['OK', 'Cancel'],
+      message: 'Not normally necessary',
+      detail: 'TLL PDFs downloaded directly from the BAdW website need to be renamed, but this happens automatically when a new version of Diogenes is installed.\nClick on OK below to manually rename the files located in:\n\n'+TLLpath
+    })
+    if (result == 0) {
+      let rename = spawn(perlName, [renamePath, TLLpath], {'windowsHide': true})
+      rename.stdout.on('data', (data) => {
+        dialog.showMessageBoxSync({type: 'info', buttons: ['OK'], message: `${data}`})
+      })
+      rename.stderr.on('data', (data) => {
+        // Send fuller details on filenames to console
+        console.error(`stderr: ${data}`)
+      })
+    }
+  }
+  else {
     dialog.showMessageBoxSync({
       type: 'error',
       message: 'Error. Location for TLL PDFs has not yet been set.  Specify the location via File -> Database Locations.'
     })
-    return false
-  }
-
-  var ok = dialog.showMessageBoxSync({
-    type: 'question',
-    buttons: ['Cancel', 'OK'],
-    defaultId: 0,
-    title: 'Continue?',
-    message: 'Do you want to go ahead and download the PDFs of the Thesaurus Linguae Latinae? They will be saved to: ' + tllPath,
-    detail: 'Warning: retrieving these very large files from the website of the Bayerische Akademie der Wissenschaften may take quite a long time. To change the folder where they will be saved, cancel and go to File -> Database Locations.  Click OK to proceed with downloads.'
-  })
-  if (ok == 1) {
-    return true
-  } else {
-    return false
   }
 }
 
@@ -993,7 +1032,7 @@ function tllFileMapRead () {
 function showPDF (pseudoUrl, external) {
   if (external == 'true') { // a string, not a boolean
     localURL = 'http://localhost:' + dioSettings.port + '/' + pseudoUrl
-    require('electron').shell.openExternal(localURL)
+    shell.openExternal(localURL)
     return
   }
   var m = pseudoUrl.match(/^tll-pdf\/(.*?)\.pdf/)
