@@ -194,7 +194,7 @@ electron/electron-v$(ELECTRONVERSION)-darwin-arm64:
 # Remove spurious "Electron is damaged" error message
 	xattr -cr electron/electron-v$(ELECTRONVERSION)-darwin-arm64/Electron.app
 
-mac-x64: all electron/electron-v$(ELECTRONVERSION)-darwin-x64 build/diogenes.icns
+app/mac-x64: all electron/electron-v$(ELECTRONVERSION)-darwin-x64 build/diogenes.icns
 	rm -rf app/mac-x64
 	mkdir -p app/mac-x64
 	mkdir -p app/mac-x64/about
@@ -222,7 +222,7 @@ mac-x64: all electron/electron-v$(ELECTRONVERSION)-darwin-x64 build/diogenes.icn
 	mv app/mac-x64/LICENSES.chromium.html app/mac-x64/about/
 	mv app/mac-x64/version app/mac-x64/about/
 
-mac-arm64: all electron/electron-v$(ELECTRONVERSION)-darwin-arm64 build/diogenes.icns
+app/mac-arm64: all electron/electron-v$(ELECTRONVERSION)-darwin-arm64 build/diogenes.icns
 	rm -rf app/mac-arm64
 	mkdir -p app/mac-arm64
 	mkdir -p app/mac-arm64/about
@@ -256,11 +256,20 @@ zip-linux64: app/linux64
 
 apps: mac-x64 mac-arm64 linux64 #w32
 
-zip-mac: app/mac
-	rm -rf app/diogenes-mac-$(DIOGENESVERSION)
-	mv app/mac app/diogenes-mac-$(DIOGENESVERSION)
-	cd app;zip -r diogenes-mac-$(DIOGENESVERSION).zip diogenes-mac-$(DIOGENESVERSION)
-	rm -rf diogenes-mac-$(DIOGENESVERSION)
+# Need to use ditto after codesigning, not zip
+zip-mac-x64: app/mac-x64
+	rm -rf app/diogenes-mac-x64-$(DIOGENESVERSION)
+	codesign -v -s "Peter Heslin" app/mac-x64/Diogenes.app
+	mv app/mac-x64 app/diogenes-mac-x64-$(DIOGENESVERSION)
+	cd app;ditto -c -k --keepParent diogenes-mac-x64-$(DIOGENESVERSION) diogenes-mac-x64$-(DIOGENESVERSION).zip 
+	rm -rf app/diogenes-mac-x64-$(DIOGENESVERSION)
+
+zip-mac-arm64: app/mac-arm64
+	rm -rf app/diogenes-mac-arm64-$(DIOGENESVERSION)
+	codesign -v -s "Peter Heslin" app/mac-arm64/Diogenes.app
+	mv app/mac-arm64 app/diogenes-mac-arm64-$(DIOGENESVERSION)
+	cd app;ditto -c -k --keepParent diogenes-mac-arm64-$(DIOGENESVERSION) diogenes-mac-arm64-$(DIOGENESVERSION).zip
+	rm -rf app/diogenes-mac-arm64-$(DIOGENESVERSION)
 
 zip-w32: app/w32
 	rm -rf app/diogenes-win32-$(DIOGENESVERSION)
