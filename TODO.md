@@ -1,8 +1,4 @@
 # For next release
-## Fix Mac security issue
-Get developer account; notarize app
-## Distribute Apple silicon version on website.
-Could not do this previously, because gatekeeper complains.
 ## 
 # Future to-do items
 ## Change prebuilt-data repo to use git-lfs (and my ssh key)

@@ -2,15 +2,18 @@
 
 ## 4.7
 
+- Mac apps are signed and notarized, as now required by Apple.
 - No longer crashing when files in databases are missing or damaged, and more helpful error messages in these cases.
+- Mac app available for Apple silicon (AMD), as well as for Intel.
 - Logeion links work again.
-- Added option to open PDFs in system browser rather than inside Diogenes app.
 - Configurable option to add links to other Greek/Latin dictionaries.
 - Option to use a different English dictionary.
-- New means for downloading TLL PDFs.
+- New provision for downloading TLL PDFs.
+- Added option to open PDFs in system browser rather than inside Diogenes app.
 - Added link to settings page when running outside Electron app.
 - Fix setting of XML export folder so export works outside Electron app.
 - Add switch to force XML export to consider texts prose or verse.
+- Upgrade to Electron v. 34
 
 ## 4.6
 

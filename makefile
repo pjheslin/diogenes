@@ -252,20 +252,25 @@ zip-linux64: app/linux64
 
 apps: mac-x64 mac-arm64 linux64 #w32
 
-# Need to use ditto after codesigning, not zip
+# Need to use ditto after codesigning, not zip.  You cannot staple to
+# a zip, so we staple to the app and then rezip.  No idea if that is
+# necessary
 zip-mac-x64: app/mac-x64
-	rm -rf app/diogenes-mac-x64-$(DIOGENESVERSION)
-	codesign -v -s "Peter Heslin" app/mac-x64/Diogenes.app
-	mv app/mac-x64 app/diogenes-mac-x64-$(DIOGENESVERSION)
-	cd app;ditto -c -k --keepParent diogenes-mac-x64-$(DIOGENESVERSION) diogenes-mac-x64$-(DIOGENESVERSION).zip 
-	rm -rf app/diogenes-mac-x64-$(DIOGENESVERSION)
+	rm -f app/diogenes-mac-x64-$(DIOGENESVERSION).zip
+	npx electron-osx-sign app/mac-x64/Diogenes.app
+	ditto -c -k --sequesterRsrc --keepParent app/mac-x64/Diogenes.app app/diogenes-mac-x64-$(DIOGENESVERSION).zip
+	xcrun notarytool submit app/diogenes-mac-x64-$(DIOGENESVERSION).zip --wait --apple-id "pheslin@gmail.com" --password "$(MACAPPPASSWORD)" --team-id "$(MACTEAMID)" --output-format json
+	xcrun stapler staple app/mac-x64/Diogenes.app
+	ditto -c -k --sequesterRsrc --keepParent app/mac-x64/Diogenes.app app/diogenes-mac-x64-$(DIOGENESVERSION).zip
+
 
 zip-mac-arm64: app/mac-arm64
-	rm -rf app/diogenes-mac-arm64-$(DIOGENESVERSION)
-	codesign -v -s "Peter Heslin" app/mac-arm64/Diogenes.app
-	mv app/mac-arm64 app/diogenes-mac-arm64-$(DIOGENESVERSION)
-	cd app;ditto -c -k --keepParent diogenes-mac-arm64-$(DIOGENESVERSION) diogenes-mac-arm64-$(DIOGENESVERSION).zip
-	rm -rf app/diogenes-mac-arm64-$(DIOGENESVERSION)
+	rm -f app/diogenes-mac-arm64-$(DIOGENESVERSION).zip
+	npx electron-osx-sign app/mac-arm64/Diogenes.app
+	ditto -c -k --sequesterRsrc --keepParent app/mac-arm64/Diogenes.app app/diogenes-mac-arm64-$(DIOGENESVERSION).zip
+	xcrun notarytool submit app/diogenes-mac-arm64-$(DIOGENESVERSION).zip --wait --apple-id "pheslin@gmail.com" --password "$(MACAPPPASSWORD)" --team-id "$(MACTEAMID)" --output-format json
+	xcrun stapler staple app/mac-arm64/Diogenes.app
+	ditto -c -k --sequesterRsrc --keepParent app/mac-arm64/Diogenes.app app/diogenes-mac-arm64-$(DIOGENESVERSION).zip
 
 zip-w32: app/w32
 	rm -rf app/diogenes-win32-$(DIOGENESVERSION)
