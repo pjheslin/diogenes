@@ -878,14 +878,19 @@ function printToPDF () {
 
 // Support for confirming TLL downloads
 
-function getTLLpath () {
+function getTLLpath (noFileOK) {
   try {
     var data = fs.readFileSync(prefsFile, 'utf8')
   } catch(e) {
-    dialog.showMessageBoxSync({
-      type: 'error',
-      message: 'Error. Settings file cannot be read.  Create one at File -> Database Locations'
-    })
+    if (noFileOK) {
+      console.log('Settings file cannot be read to check TLL')
+    }
+    else {
+      dialog.showMessageBoxSync({
+        type: 'error',
+        message: 'Error. Settings file cannot be read.  Create one at File -> Database Locations'
+      }) 
+    }
     return false
   }
 
@@ -903,7 +908,7 @@ function tllCheck () {
   // Test for old filenames: we check for a leading 0 and rename all
   // if found.
   console.log('Checking TLL filenames.')
-  TLLpath = getTLLpath()
+  TLLpath = getTLLpath(true)
   if (TLLpath) {
     var filenames = fs.readdirSync(TLLpath)
     var oldFile = filenames.filter(str => str.startsWith('0'))
