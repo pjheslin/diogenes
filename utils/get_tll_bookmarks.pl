@@ -59,13 +59,19 @@ my %start_page = %{ start_pages() };
 open(my $json_fh, "<:encoding(UTF-8)", $json_file)
     or die("Can't open $json_file: $!\n");
 my $junk = <$json_fh>; # throw away first line
+my @lines = <$json_fh>;
 print STDERR "Processing index.json\n";
-while (<$json_fh>) {
-    m#\{"0":\{"_":"(.*?)\s+<a onclick=\\"rI\(event,'-/(.*?)\.(jpg|pdf)#;
+
+# We take the lines in reverse order so that, when there are multiple
+# numbered entries for the same lemma, the first one at the start of
+# all the entries takes precedence.
+for (my $i = $#lines; $i >= 0; $i--) {
+    my $line = $lines[$i];
+    $line =~ m#\{"0":\{"_":"(.*?)\s+<a onclick=\\"rI\(event,'-/(.*?)\.(jpg|pdf)#;
     my $word = $1;
     my $vol_col = $2;
-    next if m/\"DT_RowId\":83061\}/; # Bad entry
-    warn "BAD: $_" unless $word and $vol_col;
+    next if $line =~ m/\"DT_RowId\":83061\}/; # Bad entry
+    warn "BAD: $line" unless $word and $vol_col;
     $word =~ s#</?small>##g;
     $word =~ s#&[lg]t;##g;
     $word =~ s#^\d\.\s*##g;
