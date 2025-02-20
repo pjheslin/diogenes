@@ -12,6 +12,7 @@
 /server/favicon.ico
 Changes.html
 /client/node-font-list
+/mk.secrets
 
 # Elastic Beanstalk Files
 #.elasticbeanstalk/*
