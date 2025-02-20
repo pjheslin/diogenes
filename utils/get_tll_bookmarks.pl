@@ -44,7 +44,6 @@ while (my $file = readdir $dh) {
     next if $file =~ m/^\./;
     next unless $file =~ m/\.pdf$/i;
     next unless $file =~ m/ThLL/;
-    next if $file =~ m/ThLL_IX_1__3_/; # No bookmark info available yet 
     my ($vol, $cs, $ce) = get_vol_and_col($file);
     my $key = "$vol.$cs";
     # print STDERR "$vol, $cs, $ce, $key\n";
@@ -80,6 +79,7 @@ while (<$json_fh>) {
     my $col = $2;
     $vol =~ s/,/./g;
     my ($key, $start_col);
+    # print STDERR "v: $vol; c: $col\n";
     foreach my $pdf (@pdfs) {
         if ($vol eq @{$pdf}[0] and $col >= @{$pdf}[1] and $col <= @{$pdf}[2]) {
             $key = @{$pdf}[3];
@@ -111,6 +111,7 @@ sub get_vol_and_col {
     die $! unless $filename =~ m/ThLL vol\. ((?:onom|\d+)(?:\.\d+)?)/;
     my $vol = $1;
     $vol =~ s/onom\./o/;
+    $vol =~ s/^0+//;
     die $! unless
         $filename =~ m/ThLL vol\. (?:onom|\d+)(?:[\.\d]+)* col\. (\d+)-(\d+)/;
     my $col_start = $1;
@@ -172,7 +173,8 @@ sub start_pages {
       '8.1333' => 3,
       '9.1.1' => 1,
       '9.1.209' => 1,
-      '9.1.337', => 1,
+      '9.1.337' => 1,
+      '9.1.513' => 1,
       '9.2.1' => 8,
       '9.2.625' => 3,
       '10.1.1' => 6,
@@ -188,6 +190,9 @@ sub start_pages {
       '11.2.321' => 1,
       '11.2.497' => 1,
       '11.2.657' => 1,
+      '11.2.785' => 1,
+      '11.2.961' => 1,
+      '11.2.1121' => 1,
       'o2.1' => 4,
       'o3.1' => 3
     }
