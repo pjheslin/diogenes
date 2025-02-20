@@ -197,10 +197,8 @@ for Diogenes.
 
 1. PDFs of Lexica
 
-    There is one more step, which is to integrate information on where words can be found in the print versions of the _Thesaurus Linguae Latinae_ and the first edition of the _Oxford Latin Dictionary_.  The PDFs of the _TLL_ can be downloaded from the website of the Bayerische Akademie der Wissenschaften by hand, via a menu item in the Diogenes Electron application, or by running on the command line:
+    There is one more step, which is to integrate information on where words can be found in the print versions of the _Thesaurus Linguae Latinae_ and the first edition of the _Oxford Latin Dictionary_.  The PDFs of the _TLL_ can be downloaded from the website of the Bayerische Akademie der Wissenschaften or via a link that can be found in a menu item in the Diogenes Electron application.
 
-        server/tll-pdf-download.pl path/to/destination/folder
-    
     If you also have a PDF of the first edition of the _OLD_ that has the running heads as bookmarks, you can extract the necessary information from that as well.  To generate the bookmarks for both the _TLL_ and _OLD_, run:
 
         make -f mk.pdf-data TLLDIR=/path/to/tll/directory OLDFILE=/path/to/old/file
