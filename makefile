@@ -5,8 +5,11 @@
 
 include mk.common
 
-GITHUBTOKEN=replace-this-token
-CLOUDFRONTID=replace-this-id
+GITHUBTOKEN=XXXX
+CLOUDFRONTID=XXXX
+MACAPPPASSWORD=XXXX
+MACTEAMID=XXXX
+include mk.secrets
 
 DIOGENESVERSION = $(shell grep "Diogenes::Base::Version" server/Diogenes/Base.pm | sed -n 's/[^"]*"\([^"]*\)"[^"]*/\1/p')
 
@@ -66,12 +69,12 @@ electron/electron-v$(ELECTRONVERSION)-linux-x64:
 linux64: all electron/electron-v$(ELECTRONVERSION)-linux-x64
 	rm -rf app/linux64
 	mkdir -p app/linux64
-	cp -r electron/electron-v$(ELECTRONVERSION)-linux-x64/* app/linux64
-	cp -r server app/linux64
-	cp -r dependencies app/linux64
+	cp -a electron/electron-v$(ELECTRONVERSION)-linux-x64/* app/linux64
+	cp -a server app/linux64
+	cp -a dependencies app/linux64
 	mkdir -p app/linux64/dist
 	cp dist/diogenes.desktop dist/icon.svg app/linux64/dist/
-	cp -r client app/linux64/resources/app
+	cp -a client app/linux64/resources/app
 	echo '{ "version": "'$(DIOGENESVERSION)'" } ' > app/linux64/resources/app/version.js
 	mv app/linux64/electron app/linux64/diogenes
 	cp COPYING README.md app/linux64
@@ -139,13 +142,13 @@ w32: all electron/electron-v$(ELECTRONVERSION)-win32-ia32 build/w32perl build/ic
 	@echo "installed, to edit the .exe resources."
 	rm -rf app/w32
 	mkdir -p app/w32
-	cp -r electron/electron-v$(ELECTRONVERSION)-win32-ia32/* app/w32
-	cp -r client app/w32/resources/app
+	cp -a electron/electron-v$(ELECTRONVERSION)-win32-ia32/* app/w32
+	cp -a client app/w32/resources/app
 	echo '{ "version": "'$(DIOGENESVERSION)'" } ' > app/w32/resources/app/version.js
 	mv app/w32/electron.exe app/w32/diogenes.exe
-	cp -r server app/w32
-	cp -r dependencies app/w32
-	cp -r build/w32perl/strawberry app/w32
+	cp -a server app/w32
+	cp -a dependencies app/w32
+	cp -a build/w32perl/strawberry app/w32
 	cp build/icons/diogenes.ico app/w32
 	cp COPYING app/w32/COPYING.txt
 	cp README.md app/w32/README.md
@@ -162,13 +165,13 @@ w64: all electron/electron-v$(ELECTRONVERSION)-win32-x64 build/w64perl build/ico
 	@echo "installed, to edit the .exe resources."
 	rm -rf app/w64
 	mkdir -p app/w64
-	cp -r electron/electron-v$(ELECTRONVERSION)-win32-x64/* app/w64
-	cp -r client app/w64/resources/app
+	cp -a electron/electron-v$(ELECTRONVERSION)-win32-x64/* app/w64
+	cp -a client app/w64/resources/app
 	echo '{ "version": "'$(DIOGENESVERSION)'" } ' > app/w64/resources/app/version.js
 	mv app/w64/electron.exe app/w64/diogenes.exe
-	cp -r server app/w64
-	cp -r dependencies app/w64
-	cp -r build/w64perl/strawberry app/w64
+	cp -a server app/w64
+	cp -a dependencies app/w64
+	cp -a build/w64perl/strawberry app/w64
 	cp build/icons/diogenes.ico app/w64
 	cp COPYING app/w64/COPYING.txt
 	cp README.md app/w64/README.md
@@ -198,11 +201,11 @@ app/mac-x64: all electron/electron-v$(ELECTRONVERSION)-darwin-x64 build/diogenes
 	rm -rf app/mac-x64
 	mkdir -p app/mac-x64
 	mkdir -p app/mac-x64/about
-	cp -r electron/electron-v$(ELECTRONVERSION)-darwin-x64/* app/mac-x64
-	cp -r client app/mac-x64/Electron.app/Contents/Resources/app
+	cp -a electron/electron-v$(ELECTRONVERSION)-darwin-x64/* app/mac-x64
+	cp -a client app/mac-x64/Electron.app/Contents/Resources/app
 	echo '{ "version": "'$(DIOGENESVERSION)'" } ' > app/mac-x64/Electron.app/Contents/Resources/app/version.js
-	cp -r server app/mac-x64/Electron.app/Contents
-	cp -r dependencies app/mac-x64/Electron.app/Contents
+	cp -a server app/mac-x64/Electron.app/Contents
+	cp -a dependencies app/mac-x64/Electron.app/Contents
 	cp build/diogenes.icns app/mac-x64/Electron.app/Contents/Resources/
 	perl -pi -e 's/electron.icns/diogenes.icns/g' app/mac-x64/Electron.app/Contents/Info.plist
 	perl -pi -e 's/Electron/Diogenes/g' app/mac-x64/Electron.app/Contents/Info.plist
@@ -211,11 +214,6 @@ app/mac-x64: all electron/electron-v$(ELECTRONVERSION)-darwin-x64 build/diogenes
 	perl -pi -e 's#</dict>#<key>NSHumanReadableCopyright</key>\n<string>Copyright © 2019 Peter Heslin\nDistributed under the GNU GPL version 3</string>\n</dict>#' app/mac-x64/Electron.app/Contents/Info.plist
 	mv app/mac-x64/Electron.app app/mac-x64/Diogenes.app
 	mv app/mac-x64/Diogenes.app/Contents/MacOS/Electron app/mac-x64/Diogenes.app/Contents/MacOS/Diogenes
-
-# There are now multiple helper apps, and each has an Info.plist that
-# may need modifying, so for now we just refrain from renaming it
-# mv "app/mac-x64/Diogenes.app/Contents/Frameworks/Electron Helper.app/Contents/MacOS/Electron Helper" "app/mac-x64/Diogenes.app/Contents/Frameworks/Electron Helper.app/Contents/MacOS/Diogenes Helper"
-# mv "app/mac-x64/Diogenes.app/Contents/Frameworks/Electron Helper.app" "app/mac-x64/Diogenes.app/Contents/Frameworks/Diogenes Helper.app"
 	cp COPYING app/mac-x64/about/COPYING.txt
 	cp README.md app/mac-x64/about/README.md
 	mv app/mac-x64/LICENSE app/mac-x64/about/
@@ -226,11 +224,11 @@ app/mac-arm64: all electron/electron-v$(ELECTRONVERSION)-darwin-arm64 build/diog
 	rm -rf app/mac-arm64
 	mkdir -p app/mac-arm64
 	mkdir -p app/mac-arm64/about
-	cp -r electron/electron-v$(ELECTRONVERSION)-darwin-arm64/* app/mac-arm64
-	cp -r client app/mac-arm64/Electron.app/Contents/Resources/app
+	cp -a electron/electron-v$(ELECTRONVERSION)-darwin-arm64/* app/mac-arm64
+	cp -a client app/mac-arm64/Electron.app/Contents/Resources/app
 	echo '{ "version": "'$(DIOGENESVERSION)'" } ' > app/mac-arm64/Electron.app/Contents/Resources/app/version.js
-	cp -r server app/mac-arm64/Electron.app/Contents
-	cp -r dependencies app/mac-arm64/Electron.app/Contents
+	cp -a server app/mac-arm64/Electron.app/Contents
+	cp -a dependencies app/mac-arm64/Electron.app/Contents
 	cp build/diogenes.icns app/mac-arm64/Electron.app/Contents/Resources/
 	perl -pi -e 's/electron.icns/diogenes.icns/g' app/mac-arm64/Electron.app/Contents/Info.plist
 	perl -pi -e 's/Electron/Diogenes/g' app/mac-arm64/Electron.app/Contents/Info.plist
@@ -239,8 +237,6 @@ app/mac-arm64: all electron/electron-v$(ELECTRONVERSION)-darwin-arm64 build/diog
 	perl -pi -e 's#</dict>#<key>NSHumanReadableCopyright</key>\n<string>Copyright © 2019 Peter Heslin\nDistributed under the GNU GPL version 3</string>\n</dict>#' app/mac-arm64/Electron.app/Contents/Info.plist
 	mv app/mac-arm64/Electron.app app/mac-arm64/Diogenes.app
 	mv app/mac-arm64/Diogenes.app/Contents/MacOS/Electron app/mac-arm64/Diogenes.app/Contents/MacOS/Diogenes
-# mv "app/mac-arm64/Diogenes.app/Contents/Frameworks/Electron Helper.app/Contents/MacOS/Electron Helper" "app/mac-arm64/Diogenes.app/Contents/Frameworks/Electron Helper.app/Contents/MacOS/Diogenes Helper"
-# mv "app/mac-arm64/Diogenes.app/Contents/Frameworks/Electron Helper.app" "app/mac-arm64/Diogenes.app/Contents/Frameworks/Diogenes Helper.app"
 	cp COPYING app/mac-arm64/about/COPYING.txt
 	cp README.md app/mac-arm64/about/README.md
 	mv app/mac-arm64/LICENSE app/mac-arm64/about/
