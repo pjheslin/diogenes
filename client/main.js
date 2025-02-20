@@ -552,7 +552,7 @@ function initializeMenuTemplate () {
          accelerator: 'CmdOrCtrl+[',
          click: (menu, win) => {
            let contents = win.webContents
-           contents.goBack()
+           contents.navigationHistory.goBack()
          }},
         {label: 'Forward',
          accelerator: 'CmdOrCtrl+]',
@@ -1093,7 +1093,7 @@ function showTLL (vol, pseudoUrl) {
     }
   }
   var win = createWindow(null, 20, 20)
-  console.log('Loading TLL: ', tllURL)
+  // console.log('Loading TLL: ', tllURL)
   return win.webContents.loadURL(tllURL)
 }
 
