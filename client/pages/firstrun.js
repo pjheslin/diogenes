@@ -60,6 +60,7 @@ async function showPath(dbName, folderPath) {
     checkmark.innerHTML = '✓'
     checkmark.classList.remove('warn')
     checkmark.classList.add('valid')
+    document.getElementById('donesection').style.display = 'block'
   } else {
     checkmark.innerHTML = '✕ No authtab.dir found; this doesn\'t look like a correct database location'
     checkmark.classList.remove('valid')
