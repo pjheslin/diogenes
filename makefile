@@ -17,7 +17,6 @@ DIOGENESVERSION = $(shell grep "Diogenes::Base::Version" server/Diogenes/Base.pm
 ## (for both architectures) before anything else:
 # xattr -r -d com.apple.quarantine electron/electron-v34.1.0-darwin-arm64/Electron.app
 ELECTRONVERSION = 34.1.0
-# ELECTRONVERSION = 20.0.0
 
 ENTSUM = 84cb3710463ea1bd80e6db3cf31efcb19345429a3bafbefc9ecff71d0a64c21c
 UNICODEVERSION = 7.0.0
@@ -152,7 +151,7 @@ w32: all electron/electron-v$(ELECTRONVERSION)-win32-ia32 build/w32perl build/ic
 	cp build/icons/diogenes.ico app/w32
 	cp COPYING app/w32/COPYING.txt
 	cp README.md app/w32/README.md
-	wine64 build/rcedit.exe app/w32/diogenes.exe \
+	wine build/rcedit.exe app/w32/diogenes.exe \
 	    --set-icon build/icons/diogenes.ico \
 	    --set-product-version $(DIOGENESVERSION) \
 	    --set-file-version $(DIOGENESVERSION) \
@@ -261,7 +260,7 @@ zip-mac-x64: app/mac-x64
 	ditto -c -k --sequesterRsrc --keepParent app/mac-x64/Diogenes.app app/diogenes-mac-x64-$(DIOGENESVERSION).zip
 	xcrun notarytool submit app/diogenes-mac-x64-$(DIOGENESVERSION).zip --wait --apple-id "pheslin@gmail.com" --password "$(MACAPPPASSWORD)" --team-id "$(MACTEAMID)" --output-format json
 	xcrun stapler staple app/mac-x64/Diogenes.app
-	ditto -c -k --sequesterRsrc --keepParent app/mac-x64/Diogenes.app app/diogenes-mac-x64-$(DIOGENESVERSION).zip
+	ditto -c -k --sequesterRsrc --keepParent app/mac-x64/Diogenes.app app/mac-x64/diogenes-mac-x64-$(DIOGENESVERSION).zip
 
 
 zip-mac-arm64: app/mac-arm64
@@ -270,7 +269,7 @@ zip-mac-arm64: app/mac-arm64
 	ditto -c -k --sequesterRsrc --keepParent app/mac-arm64/Diogenes.app app/diogenes-mac-arm64-$(DIOGENESVERSION).zip
 	xcrun notarytool submit app/diogenes-mac-arm64-$(DIOGENESVERSION).zip --wait --apple-id "pheslin@gmail.com" --password "$(MACAPPPASSWORD)" --team-id "$(MACTEAMID)" --output-format json
 	xcrun stapler staple app/mac-arm64/Diogenes.app
-	ditto -c -k --sequesterRsrc --keepParent app/mac-arm64/Diogenes.app app/diogenes-mac-arm64-$(DIOGENESVERSION).zip
+	ditto -c -k --sequesterRsrc --keepParent app/mac-arm64/Diogenes.app app/mac-arm64/diogenes-mac-arm64-$(DIOGENESVERSION).zip
 
 zip-w32: app/w32
 	rm -rf app/diogenes-win32-$(DIOGENESVERSION)
@@ -284,23 +283,19 @@ zip-w64: app/w64
 	cd app;zip -r diogenes-win64-$(DIOGENESVERSION).zip diogenes-win64-$(DIOGENESVERSION)
 	rm -rf app/diogenes-win64-$(DIOGENESVERSION)
 
-zip-all: zip-linux64 zip-mac zip-w32 zip-w64
+zip-all: zip-linux64 zip-mac-x64 zip-mac-arm64 zip-w32 zip-w64
 
 build/inno-setup/app/ISCC.exe:
 	mkdir -p build/inno-setup
 	curl -Lo build/inno-setup/is.exe http://www.jrsoftware.org/download.php/is.exe
 	cd build/inno-setup; innoextract is.exe
 
-# OS X after Catalina will not run 32-bit apps, even under emulation.
-# This is not a problem with rcedit, as we can use 64-bit wine to run
-# a 64-bit rcedit.  But there is currently only a 32-bit version of
-# Inno Setup available, so we just make the installer on Linux.  
 installer-w32: install/diogenes-setup-win32-$(DIOGENESVERSION).exe
 install/diogenes-setup-win32-$(DIOGENESVERSION).exe: build/inno-setup/app/ISCC.exe app/w32
 #install/diogenes-setup-win32-$(DIOGENESVERSION).exe: app/w32
 	mkdir -p install
 	rm -f install/diogenes-setup-win32-$(DIOGENESVERSION).exe
-	wine64 build/inno-setup/app/ISCC.exe dist/diogenes-win32.iss
+	wine build/inno-setup/app/ISCC.exe dist/diogenes-win32.iss
 	mv -f dist/Output/mysetup.exe install/diogenes-setup-win32-$(DIOGENESVERSION).exe
 	rmdir dist/Output
 
@@ -317,16 +312,12 @@ install/diogenes-setup-win64-$(DIOGENESVERSION).exe: build/inno-setup/app/ISCC.e
 # potentially confusing than a DMG installer.
 installer-mac: install/diogenes-mac-x64-$(DIOGENESVERSION).zip install/diogenes-mac-arm64-$(DIOGENESVERSION).zip
 
-install/diogenes-mac-x64-$(DIOGENESVERSION).zip: app/mac-x64
+install/diogenes-mac-x64-$(DIOGENESVERSION).zip:
 	mkdir -p install
-	rm -f install/diogenes-mac-x64-$(DIOGENESVERSION).zip
-	cd app/mac-x64; zip -r diogenes-mac-x64-$(DIOGENESVERSION).zip Diogenes.app about
 	mv app/mac-x64/diogenes-mac-x64-$(DIOGENESVERSION).zip install/
 
-install/diogenes-mac-arm64-$(DIOGENESVERSION).zip: app/mac-arm64
+install/diogenes-mac-arm64-$(DIOGENESVERSION).zip:
 	mkdir -p install
-	rm -f install/diogenes-mac-arm64-$(DIOGENESVERSION).zip
-	cd app/mac-arm64; zip -r diogenes-mac-arm64-$(DIOGENESVERSION).zip Diogenes.app about
 	mv app/mac-arm64/diogenes-mac-arm64-$(DIOGENESVERSION).zip install/
 
 # NB. Installing this Mac package will report success but silently
@@ -335,12 +326,12 @@ install/diogenes-mac-arm64-$(DIOGENESVERSION).zip: app/mac-arm64
 # in the mac directory here or another random copy on the devel
 # machine.  In other words, this installer usually will fail silently
 # when run on the machine that created the installer.
-installer-macpkg: install/diogenes-mac-$(DIOGENESVERSION).pkg
-install/diogenes-mac-$(DIOGENESVERSION).pkg: app/mac
-	mkdir -p install
-	rm -f install/diogenes-mac-$(DIOGENESVERSION).pkg
-	fpm --prefix=/Applications -C app/mac -t osxpkg -n Diogenes -v $(DIOGENESVERSION) --osxpkg-identifier-prefix uk.ac.durham.diogenes -s dir Diogenes.app
-	mv Diogenes-$(DIOGENESVERSION).pkg install/diogenes-mac-$(DIOGENESVERSION).pkg
+# installer-macpkg: install/diogenes-mac-$(DIOGENESVERSION).pkg
+# install/diogenes-mac-$(DIOGENESVERSION).pkg: app/mac
+# 	mkdir -p install
+# 	rm -f install/diogenes-mac-$(DIOGENESVERSION).pkg
+# 	fpm --prefix=/Applications -C app/mac -t osxpkg -n Diogenes -v $(DIOGENESVERSION) --osxpkg-identifier-prefix uk.ac.durham.diogenes -s dir Diogenes.app
+# 	mv Diogenes-$(DIOGENESVERSION).pkg install/diogenes-mac-$(DIOGENESVERSION).pkg
 
 # Add --verbose to fpm call to diagnose any errors
 

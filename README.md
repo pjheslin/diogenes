@@ -1,6 +1,5 @@
 Diogenes
 ========
-
 Diogenes is a tool for searching, browsing and reading the databases
 of ancient texts, primarily in Latin and Greek, that were once
 published by the Packard Humanities Institute and the Thesaurus
@@ -18,7 +17,6 @@ for themselves.
 
 Building
 --------
-
 I would prefer not to have Diogenes packaged as part of a larger
 (e.g. Linux) distribution; I would rather that users who are not
 building the application themselves download the installer from the
@@ -42,7 +40,6 @@ yourself, see the instructions below.
 
 Platform-Specific Requirements
 ------------------------------
-
 For the most part, Diogenes and its installers can be built for all
 platforms on either Linux or Mac, but there are some steps that need
 to be done on a specific OS.  In particular, with respect to Windows:
@@ -78,7 +75,6 @@ Regarding the issues with compiling Morpheus on Linux and OS X, see below.
 
 Building the Electron app
 -------------------------
-
 Once you have installed the utility programs for building the icons as
 mentioned above, you can run this command, which will create the icons
 and collect a number of other required files:
@@ -94,24 +90,16 @@ according to the platform you're building for:
     make mac-x64   # for mac osx build (Intel)
     make mac-arm64 # for mac osx build (Apple silicon)
 
-Gatekeeper will prevent the unsigned Apple silicon app from running unless you remove its quarantine attribute: `xattr -cr Diogenes.app`.
-
 Building the installers
 -----------------------
-
-Apart from Windows, the other installers can be built on either Linux
-or OS X.  To create the Linux installers you will need to install
-`fpm`, which is done via the Ruby package manager [(see
-instructions)](https://fpm.readthedocs.io/en/latest/installing.html),
-and for the RPM installer you will also need to install `rpm`, (Linux
-or Homebrew).
-
-There is a target in the Makefile to create an OS X pkg, but I don't
-recommend using it: if another version of Diogenes with the same
-version number is already installed, the Mac package installer will
-leave it untouched, will not install the new package, and will
-nonetheless report success.  The Diogenes.app for OS X is distributed
-in a simple zip file, which seems to work fine for users.
+Most of the installers can be built on either Linux or OS X.  Building
+the Windows installer requires Wine.  To create the Linux installers
+you will need to install `fpm`, which is done via the Ruby package
+manager [(see instructions)](https://fpm.readthedocs.io/en/latest/installing.html), and for the RPM installer you will also
+need to install `rpm`, (Linux or Homebrew).  The Diogenes.app for OS X
+is distributed in a simple zip file, but Xcode command-line utilities
+are required for signing and notarizing the app, so this is
+impractical to do except on a Mac.
 
 To build an installer for your target platform, run one of the
 commands below.
@@ -122,10 +110,8 @@ commands below.
     make installer-rpm64      # Make an RPM Linux package
     make installer-arch64     # Make a pacman package for Arch Linux
 
-
 Running the server
 ------------------
-
 Instead of running the standalone, integrated app, you may prefer to
 run Diogenes as a server and to connect to it via an ordinary web
 browser.  The server can be started using the script:
@@ -138,7 +124,6 @@ For full usage details run it like this:
 
 Additional features
 -------------------
-
 Diogenes has a number of other features which predate the development
 of the standalone app and which are no longer fully supported but
 which may still work.  These include a command-line interface
@@ -150,7 +135,6 @@ Various options for XML export are available by running the
 
 Building the morphology data & dictionaries
 -------------------------------------------
-
 Instead of downloading the pre-built lexical data via
 `make -f mk.prebuilt-data`, you can build it from scratch. The
 following steps will download the lexica and the Morpheus parser,
