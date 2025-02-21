@@ -27,9 +27,16 @@
 
 document.addEventListener('keydown', event => {
     if (event.key === 'Escape' || event.keyCode === 27) {
-        cancel();
+        cancel()
     }
-});
+    else if (event.key === "Enter" || event.keyCode === 13) {
+        event.preventDefault()
+        next()
+    }
+    else {
+
+    }
+})
 
 function sendFindRequest (string, direction) {
     window.electron.findText(string, direction)
@@ -41,10 +48,12 @@ function cancel() {
 }
 
 function next() {
+    event.preventDefault()
     sendFindRequest(document.getElementById("textToFind").value, "next")
 }
 
 function prev() {
+    event.preventDefault()
     sendFindRequest(document.getElementById("textToFind").value, "prev")
 }
 

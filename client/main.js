@@ -600,12 +600,12 @@ function initializeMenuTemplate () {
         {label: 'Find Next',
          accelerator: 'CmdOrCtrl+G',
          click: (menu, win) => {
-           findTargetWin.webContents.findInPage( mySearchText )
+           findTextRemote(mySearchText, 'next')
          }},
         {label: 'Find Previous',
          accelerator: 'CmdOrCtrl+Shift+G',
          click: (menu, win) => {
-           findTargetWin.webContents.findInPage( mySearchText, {'forward': false} )
+           findTextRemote(mySearchText, 'prev')
          }},
 
       ]
@@ -685,7 +685,7 @@ function sendKeybinding (win, code) {
 
 let findWin
 let findTargetWin;
-let mySearchText;
+let mySearchText = '';
 
 function findText (win) {
 
@@ -777,17 +777,20 @@ app.whenReady().then( () => {
 
 // Support for events arising from the find mini-window
 function findTextRemote (string, direction) {
-  if (string === "") {
+  if (string == "") {
     findTargetWin.webContents.stopFindInPage('clearSelection')
+    return
   }
-  else {
-    if (direction === "next") {
-      findTargetWin.webContents.findInPage(string)
-    } else {
-      findTargetWin.webContents.findInPage(string, {'forward': false})
-    }
-    mySearchText = string
-  }  
+  var first = false
+  if (string != mySearchText) {
+    first = true
+  }
+  if (direction === "next") {
+    findTargetWin.webContents.findInPage(string, {'findNext': first})
+  } else {
+    findTargetWin.webContents.findInPage(string, {'forward': false, 'findNext': first})
+  }
+  mySearchText = string
 }
 
 // Support for firstrun (db settings) page
