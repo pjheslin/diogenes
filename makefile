@@ -410,16 +410,16 @@ tag:
 	git tag -a -m "Diogenes Public Release" $(DIOGENESVERSION)
 	git push origin master
 
-# make release GITHUBTOKEN=github-access-token
 release: $(installers)
-	utils/github-create-release.sh github_api_token=$(GITHUBTOKEN) owner=pjheslin repo=diogenes tag=$(DIOGENESVERSION) prerelease=false
-	for installer in $(installers); do utils/upload-github-release-asset.sh github_api_token=$(GITHUBTOKEN) owner=pjheslin repo=diogenes tag=$(DIOGENESVERSION) filename=$$installer > /dev/null; done
+	gh auth login
+	gh release create -R pjheslin/diogenes $(DIOGENESVERSION)
+	gh release upload -R pjheslin/diogenes $(DIOGENESVERSION) install/diogenes-$(DIOGENESVERSION)_amd64.deb
+	gh release upload -R pjheslin/diogenes $(DIOGENESVERSION) install/diogenes-$(DIOGENESVERSION).x86_64.rpm
+	gh release upload -R pjheslin/diogenes $(DIOGENESVERSION) install/diogenes-$(DIOGENESVERSION).pkg.tar.xz
+	gh release upload -R pjheslin/diogenes $(DIOGENESVERSION) install/diogenes-mac-arm64-$(DIOGENESVERSION).zip
+	gh release upload -R pjheslin/diogenes $(DIOGENESVERSION) install/diogenes-mac-x64-$(DIOGENESVERSION).zip
+	gh release upload -R pjheslin/diogenes $(DIOGENESVERSION) install/diogenes-setup-win32-$(DIOGENESVERSION).exe
 
-# Upload Windows installer separately
-release-windows:
-	utils/upload-github-release-asset.sh github_api_token=$(GITHUBTOKEN) owner=pjheslin repo=diogenes tag=$(DIOGENESVERSION) filename=install/diogenes-setup-win32-$(DIOGENESVERSION).exe > /dev/null
-
-# make update-website CLOUDFRONTID=id
 update-website:
 	echo 'var DiogenesVersion = "'$(DIOGENESVERSION)'";' > ../../website/d/version.js
 	rclone -v copy ../../website/d/version.js diogenes-s3:d.iogen.es/d/
