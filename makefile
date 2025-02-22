@@ -196,7 +196,7 @@ electron/electron-v$(ELECTRONVERSION)-darwin-arm64:
 # Remove spurious "Electron is damaged" error message
 	xattr -cr electron/electron-v$(ELECTRONVERSION)-darwin-arm64/Electron.app
 
-app/mac-x64: all electron/electron-v$(ELECTRONVERSION)-darwin-x64 build/diogenes.icns
+mac-x64: all electron/electron-v$(ELECTRONVERSION)-darwin-x64 build/diogenes.icns
 	rm -rf app/mac-x64
 	mkdir -p app/mac-x64
 	mkdir -p app/mac-x64/about
@@ -219,7 +219,7 @@ app/mac-x64: all electron/electron-v$(ELECTRONVERSION)-darwin-x64 build/diogenes
 	mv app/mac-x64/LICENSES.chromium.html app/mac-x64/about/
 	mv app/mac-x64/version app/mac-x64/about/
 
-app/mac-arm64: all electron/electron-v$(ELECTRONVERSION)-darwin-arm64 build/diogenes.icns
+mac-arm64: all electron/electron-v$(ELECTRONVERSION)-darwin-arm64 build/diogenes.icns
 	rm -rf app/mac-arm64
 	mkdir -p app/mac-arm64
 	mkdir -p app/mac-arm64/about
@@ -249,12 +249,12 @@ zip-linux64: app/linux64
 	cd app;tar c diogenes-linux-$(DIOGENESVERSION) | xz > diogenes-linux-$(DIOGENESVERSION).tar.xz
 	rm -rf app/diogenes-linux-$(DIOGENESVERSION)
 
-apps: mac-x64 mac-arm64 linux64 #w32
+apps-all: mac-x64 mac-arm64 linux64 w32
 
 # Need to use ditto after codesigning, not zip.  You cannot staple to
 # a zip, so we staple to the app and then rezip.  No idea if that is
 # necessary
-zip-mac-x64: app/mac-x64
+zip-mac-x64: mac-x64
 	rm -f app/diogenes-mac-x64-$(DIOGENESVERSION).zip
 	npx electron-osx-sign app/mac-x64/Diogenes.app
 	ditto -c -k --sequesterRsrc --keepParent app/mac-x64/Diogenes.app app/diogenes-mac-x64-$(DIOGENESVERSION).zip
@@ -263,7 +263,7 @@ zip-mac-x64: app/mac-x64
 	ditto -c -k --sequesterRsrc --keepParent app/mac-x64/Diogenes.app app/mac-x64/diogenes-mac-x64-$(DIOGENESVERSION).zip
 
 
-zip-mac-arm64: app/mac-arm64
+zip-mac-arm64: mac-arm64
 	rm -f app/diogenes-mac-arm64-$(DIOGENESVERSION).zip
 	npx electron-osx-sign app/mac-arm64/Diogenes.app
 	ditto -c -k --sequesterRsrc --keepParent app/mac-arm64/Diogenes.app app/diogenes-mac-arm64-$(DIOGENESVERSION).zip
@@ -310,13 +310,11 @@ install/diogenes-setup-win64-$(DIOGENESVERSION).exe: build/inno-setup/app/ISCC.e
 # Experience shows that the pkg installer is fragile, so we have
 # reverted to distributing the app as a simple zip file, which is less
 # potentially confusing than a DMG installer.
-installer-mac: install/diogenes-mac-x64-$(DIOGENESVERSION).zip install/diogenes-mac-arm64-$(DIOGENESVERSION).zip
-
-install/diogenes-mac-x64-$(DIOGENESVERSION).zip:
+installer-mac-x64: zip-mac-x64
 	mkdir -p install
 	mv app/mac-x64/diogenes-mac-x64-$(DIOGENESVERSION).zip install/
 
-install/diogenes-mac-arm64-$(DIOGENESVERSION).zip:
+installer-mac-arm64: zip-mac-arm64
 	mkdir -p install
 	mv app/mac-arm64/diogenes-mac-arm64-$(DIOGENESVERSION).zip install/
 
@@ -387,9 +385,10 @@ install/diogenes-$(DIOGENESVERSION).pkg.tar.xz: app/linux64
 # For now, we stick with the 32-bit app for Windows
 
 # installer-all: installer-w32 installer-w64 installer-mac installer-deb64 installer-rpm64 installer-arch64
-installer-all: installer-mac installer-deb64 installer-rpm64 installer-arch64 #installer-w32 
+installer-all: installer-mac-x64 installer-mac-arm64 installer-deb64 installer-rpm64 installer-arch64 #installer-w32
+
 installer-linux: installer-deb64 installer-rpm64 installer-arch64
-# installers = install/diogenes-setup-win32-$(DIOGENESVERSION).exe install/diogenes-setup-win64-$(DIOGENESVERSION).exe install/diogenes-mac-$(DIOGENESVERSION).zip install/diogenes-$(DIOGENESVERSION)_amd64.deb install/diogenes-$(DIOGENESVERSION).x86_64.rpm install/diogenes-$(DIOGENESVERSION).pkg.tar.xz
+
 installers =  install/diogenes-mac-arm64-$(DIOGENESVERSION).zip install/diogenes-mac-x64-$(DIOGENESVERSION).zip install/diogenes-$(DIOGENESVERSION)_amd64.deb install/diogenes-$(DIOGENESVERSION).x86_64.rpm install/diogenes-$(DIOGENESVERSION).pkg.tar.xz install/diogenes-setup-win32-$(DIOGENESVERSION).exe
 
 clean:
