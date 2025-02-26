@@ -302,8 +302,10 @@ my %defaults = (
     seen_author_list => [],
     hits => 0,
 
-    # Only applicable for Electron app
-    external_pdf_viewer => 'false',
+    # At the moment, the internal PDF viewer in the Electron app is
+    # quite slow to open large files, so we default to using the
+    # browser.
+    external_pdf_viewer => 'true',
     xml_export_dir => '',
 
     # URL of Latin/Greek dict server; current word is appended. Must
