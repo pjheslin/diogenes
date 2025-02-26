@@ -5,11 +5,13 @@
 
 include mk.common
 
+# Private info set in mk.secrets
 GITHUBTOKEN=XXXX
 CLOUDFRONTID=XXXX
 MACAPPPASSWORD=XXXX
 MACTEAMID=XXXX
-include mk.secrets
+# Do not give an error if mk.secrets file does not exist
+-include mk.secrets
 
 DIOGENESVERSION = $(shell grep "Diogenes::Base::Version" server/Diogenes/Base.pm | sed -n 's/[^"]*"\([^"]*\)"[^"]*/\1/p')
 
