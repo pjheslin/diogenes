@@ -557,7 +557,7 @@ my $swap_element = sub {
         if ($close) {
             $out .= '</div>';
         } else {
-            my $level = $e->{attrib}->{level};
+            my $level = $e->{attrib}->{level} || 0;
             my $factor = $dweb ? 1 : 2;
             my $padding = $level * $factor;
             my $heading = $e->{attrib}->{n};
