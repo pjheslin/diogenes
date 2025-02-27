@@ -13,7 +13,8 @@
 - Added link to settings page when running outside Electron app.
 - Fix setting of XML export folder so export works outside Electron app.
 - Add switch to force XML export to consider texts prose or verse.
-- Upgrade to Electron v. 34
+- Upgrade to Electron v. 34.
+- Added fixes to lexica made by Logeion.
 
 ## 4.6
 
