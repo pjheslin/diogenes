@@ -152,6 +152,7 @@ sub seek_passage
     my ($block, $old_block);
 
     my $typeauth = $self->{type}.$auth;
+    my $typeauthwork = $typeauth.$work;
 
     # There are very many short texts (esp fragmentary) where using
     # the ToC causes us to miss the work entirely.  Not sure if this
@@ -276,11 +277,13 @@ sub seek_passage
     }
     print STDERR "Search begins: $i \n" if $self->{debug};
 
-    # For authors where we have to do a strict match rather than
+    # For some texts we have to do a strict match rather than
     # matching when the citation is higher than the target.  For
-    # Sextus Empiricus AM, books 1-6 come after 7-11.
-    my $weird_auth;
-    $weird_auth = 1 if $typeauth eq 'tlg0544';
+    # Sextus Empiricus AM, books 1-6 come after 7-11.  In Plato's
+    # Spuria, the Stephanus numbers jump around.
+    my $weird_text;
+    $weird_text = 1 if $typeauth eq 'tlg0544';
+    $weird_text = 1 if $typeauthwork eq 'tlg0059038';
 
     # read first bookmark
     $code = ord (substr ($buf, ++$i, 1));
@@ -298,7 +301,7 @@ sub seek_passage
       
       # loop until the count at this level reaches the desired number
       next LEV unless $target{$lev};
-      if ($weird_auth) {
+      if ($weird_text) {
           next LEV if (compare($self->{level}{$lev}, $target{$lev}) == 0);
       } else {
           next LEV if (compare($self->{level}{$lev}, $target{$lev}) >= 0);
@@ -325,7 +328,7 @@ sub seek_passage
         
         # String equivalence
         print STDERR "=> $self->{level}{$lev} :: $target{$lev} \n" if $self->{debug};
-        if ($weird_auth) {
+        if ($weird_text) {
             last SCAN if (compare($self->{level}{$lev}, $target{$lev}) == 0);
         } else {
             last SCAN if (compare($self->{level}{$lev}, $target{$lev}) >= 0);

@@ -1,5 +1,5 @@
 # For next release
-## 
+## Sign Windows app/installer
 # Future to-do items
 ## Change prebuilt-data repo to use git-lfs (and my ssh key)
 ## Add dark mode option.
