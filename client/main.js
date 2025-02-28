@@ -782,13 +782,10 @@ function findTextRemote (string, direction) {
     return
   }
   var first = false
-  if (string != mySearchText) {
-    first = true
-  }
   if (direction === "next") {
-    findTargetWin.webContents.findInPage(string, {'findNext': first})
+    findTargetWin.webContents.findInPage(string)
   } else {
-    findTargetWin.webContents.findInPage(string, {'forward': false, 'findNext': first})
+    findTargetWin.webContents.findInPage(string, {'forward': false })
   }
   mySearchText = string
 }
