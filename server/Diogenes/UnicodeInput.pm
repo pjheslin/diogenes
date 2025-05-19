@@ -37,8 +37,8 @@ sub unicode_pattern {
     my $self = shift;
     my $pat = shift;
 
-    if ($pat =~ m/^[\p{Script:Latin}\p{Punct}\s]+$/) {
-        # All Latin chars (also accented)
+    if ($pat =~ m/^[\p{Script:Latin}\p{Punct}\s\|\+]+$/) {
+        # All Latin chars, also accented and regex metachars: |+ are not in Punct
         if (ref $self eq 'Diogenes::Search') {
             return $self->latin_pattern($pat);
         }
